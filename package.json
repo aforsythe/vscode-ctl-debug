@@ -1,0 +1,82 @@
+{
+    "name": "ctl-debug",
+    "displayName": "CTL Debug",
+    "description": "Single-pixel debugger for CTL color transform language modules",
+    "version": "0.1.0",
+    "publisher": "ctl-org",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/ampas/CTL"
+    },
+    "engines": { "vscode": "^1.80.0" },
+    "categories": ["Debuggers", "Programming Languages"],
+    "main": "./out/extension.js",
+    "contributes": {
+        "languages": [{
+            "id": "ctl",
+            "aliases": ["CTL", "Color Transform Language"],
+            "extensions": [".ctl"]
+        }],
+        "debuggers": [{
+            "type": "ctl",
+            "label": "CTL Single-Pixel Debugger",
+            "languages": ["ctl"],
+            "configurationAttributes": {
+                "launch": {
+                    "required": ["program"],
+                    "properties": {
+                        "program": {
+                            "type": "string",
+                            "description": "Path to the .ctl file to debug",
+                            "default": "${file}"
+                        },
+                        "function": {
+                            "type": "string",
+                            "description": "CTL function to invoke",
+                            "default": "main"
+                        },
+                        "pixel": {
+                            "type": "array",
+                            "description": "Pixel value to drive the function on (3 or 4 floats)",
+                            "items": { "type": "number" },
+                            "default": [0.5, 0.5, 0.5]
+                        },
+                        "stopOnEntry": {
+                            "type": "boolean",
+                            "description": "Stop on the first executed instruction",
+                            "default": false
+                        },
+                        "ctldap": {
+                            "type": "string",
+                            "description": "Path to the ctldap binary",
+                            "default": "ctldap"
+                        }
+                    }
+                }
+            },
+            "initialConfigurations": [{
+                "type": "ctl",
+                "request": "launch",
+                "name": "Debug CTL",
+                "program": "${file}",
+                "function": "main",
+                "pixel": [0.5, 0.5, 0.5],
+                "stopOnEntry": false
+            }]
+        }]
+    },
+    "activationEvents": [
+        "onDebug",
+        "onLanguage:ctl"
+    ],
+    "scripts": {
+        "vscode:prepublish": "npm run compile",
+        "compile": "tsc -p ./",
+        "watch":   "tsc -watch -p ./"
+    },
+    "devDependencies": {
+        "@types/node":    "^20.0.0",
+        "@types/vscode":  "^1.80.0",
+        "typescript":     "^5.0.0"
+    }
+}
