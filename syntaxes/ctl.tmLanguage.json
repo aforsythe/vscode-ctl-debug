@@ -1,0 +1,45 @@
+{
+    "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+    "name": "Color Transform Language",
+    "scopeName": "source.ctl",
+    "patterns": [
+        { "include": "#comments" },
+        { "include": "#keywords" },
+        { "include": "#types"    },
+        { "include": "#numbers"  },
+        { "include": "#strings"  }
+    ],
+    "repository": {
+        "comments": {
+            "patterns": [
+                { "name": "comment.line.double-slash.ctl",  "match": "//.*$" },
+                { "name": "comment.block.ctl", "begin": "/\\*", "end": "\\*/" }
+            ]
+        },
+        "keywords": {
+            "patterns": [{
+                "name": "keyword.control.ctl",
+                "match": "\\b(if|else|for|while|return|namespace|input|output|uniform|varying|const|true|false|import)\\b"
+            }]
+        },
+        "types": {
+            "patterns": [{
+                "name": "support.type.ctl",
+                "match": "\\b(void|bool|int|unsigned|half|float|string|struct)\\b"
+            }]
+        },
+        "numbers": {
+            "patterns": [{
+                "name": "constant.numeric.ctl",
+                "match": "\\b\\d+(\\.\\d+)?([eE][+-]?\\d+)?\\b"
+            }]
+        },
+        "strings": {
+            "patterns": [{
+                "name": "string.quoted.double.ctl",
+                "begin": "\"", "end": "\"",
+                "patterns": [{ "name": "constant.character.escape.ctl", "match": "\\\\." }]
+            }]
+        }
+    }
+}

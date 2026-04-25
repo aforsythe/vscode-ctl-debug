@@ -12,6 +12,11 @@
     "categories": ["Debuggers", "Programming Languages"],
     "main": "./out/extension.js",
     "contributes": {
+        "grammars": [{
+            "language": "ctl",
+            "scopeName": "source.ctl",
+            "path": "./syntaxes/ctl.tmLanguage.json"
+        }],
         "languages": [{
             "id": "ctl",
             "aliases": ["CTL", "Color Transform Language"],
