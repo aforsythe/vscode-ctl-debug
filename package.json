@@ -35,10 +35,25 @@
                             "description": "Path to the .ctl file to debug",
                             "default": "${file}"
                         },
+                        "programs": {
+                            "type": "array",
+                            "description": "Paths to .ctl files to chain (alternative to single `program`)",
+                            "items": { "type": "string" }
+                        },
                         "function": {
                             "type": "string",
                             "description": "CTL function to invoke",
                             "default": "main"
+                        },
+                        "functions": {
+                            "type": "array",
+                            "description": "Functions to invoke per stage (defaults to `main` for each)",
+                            "items": { "type": "string" }
+                        },
+                        "modulePaths": {
+                            "type": "array",
+                            "description": "Additional directories to search for `import` statements (combined with $CTL_MODULE_PATH and per-file parent directories)",
+                            "items": { "type": "string" }
                         },
                         "pixel": {
                             "type": "array",
@@ -59,15 +74,27 @@
                     }
                 }
             },
-            "initialConfigurations": [{
-                "type": "ctl",
-                "request": "launch",
-                "name": "Debug CTL",
-                "program": "${file}",
-                "function": "main",
-                "pixel": [0.5, 0.5, 0.5],
-                "stopOnEntry": false
-            }]
+            "initialConfigurations": [
+                {
+                    "type": "ctl",
+                    "request": "launch",
+                    "name": "Debug CTL (single file)",
+                    "program": "${file}",
+                    "function": "main",
+                    "pixel": [0.5, 0.5, 0.5],
+                    "stopOnEntry": false
+                },
+                {
+                    "type": "ctl",
+                    "request": "launch",
+                    "name": "Debug ACES chain (IDT → RRT → ODT)",
+                    "programs": ["${workspaceFolder}/IDT.ctl", "${workspaceFolder}/RRT.ctl", "${workspaceFolder}/ODT.ctl"],
+                    "functions": ["IDT::main", "RRT::main", "ODT::main"],
+                    "pixel": [0.18, 0.18, 0.18],
+                    "modulePaths": ["${workspaceFolder}/aces-dev/transforms/ctl/lib"],
+                    "stopOnEntry": false
+                }
+            ]
         }]
     },
     "activationEvents": [

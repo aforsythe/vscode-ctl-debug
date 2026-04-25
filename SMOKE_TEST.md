@@ -23,7 +23,10 @@ Prerequisites:
 
 3. Click "create a launch.json file" and pick "CTL Single-Pixel Debugger".
 
-4. Edit the generated launch.json so it matches your function:
+4. Edit the generated launch.json.  `function` is needed here because
+   the smoke fixture's entrypoint is qualified as `smoke::main` (in a
+   namespace) — for an unqualified top-level `main`, omit `function`
+   entirely and the default is used:
 
        {
            "type": "ctl",
@@ -49,6 +52,69 @@ Prerequisites:
 
 If anything misbehaves, capture the output from "Debug Console" and the
 DAP traffic via VS Code's "Debug: Show Trace" (Cmd+Shift+P).
+
+## Optional: chain test
+
+This section verifies that breakpoints fire in both stages of a two-file
+chain using the fixture transforms from `ctldap/tests/`.
+
+1. Locate the fixture files (created during the ctldap test suite build):
+
+       FIXTURES=$CTL_SOURCE_ROOT/ctldap/tests
+       # expected files:
+       #   $FIXTURES/run_chain_stage1.ctl
+       #   $FIXTURES/run_chain_stage2.ctl
+
+2. Open VS Code at the fixtures directory:
+
+       code $FIXTURES
+
+3. Create `.vscode/launch.json` in that folder:
+
+       {
+           "version": "0.2.0",
+           "configurations": [
+               {
+                   "type": "ctl",
+                   "request": "launch",
+                   "name": "chain smoke",
+                   "programs": [
+                       "${workspaceFolder}/run_chain_stage1.ctl",
+                       "${workspaceFolder}/run_chain_stage2.ctl"
+                   ],
+                   "functions": ["stage1::main", "stage2::main"],
+                   "pixel": [0.5, 0.5, 0.5],
+                   "ctldap": "/path/to/build-dbg-on/ctldap/ctldap",
+                   "stopOnEntry": false
+               }
+           ]
+       }
+
+   Adjust `ctldap` to the absolute path of your debug build.
+
+4. Open `run_chain_stage1.ctl` and set a breakpoint on its first
+   assignment line.
+
+5. Open `run_chain_stage2.ctl` and set a breakpoint on its first
+   assignment line.
+
+6. Press F5 to start the chain debug session.
+
+7. Expected — stage 1 fires first:
+   - Execution halts at the breakpoint in `run_chain_stage1.ctl`.
+   - Call Stack shows `stage1::main`.
+   - Variables panel shows the input pixel values.
+   - Press F5 (Continue).
+
+8. Expected — stage 2 fires next:
+   - Execution halts at the breakpoint in `run_chain_stage2.ctl`.
+   - Call Stack shows `stage2::main`.
+   - Variables panel shows the output of stage 1 as the new inputs.
+   - Press F5 (Continue) → session ends.
+
+If breakpoints do not fire in both files, check that the `programs` and
+`functions` arrays are parallel and that both files are saved before
+launching.
 
 ## Known v1 limitations
 
