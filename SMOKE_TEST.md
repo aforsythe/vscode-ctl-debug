@@ -1,11 +1,40 @@
 # Manual smoke test for ctl-debug VS Code extension
 
+There are two ways to verify the extension works end-to-end:
+
+- **Quickest** — `make demo` from the repo root.  No .vsix install,
+  no setup; the script builds ctldap, generates a workspace with
+  pre-wired launch.json, and launches VS Code in Extension Development
+  Host mode pointing at the source tree.  Jump to **Verify** below.
+- **Manual install** — package the .vsix and install it into your
+  primary VS Code instance, then drive it against your own files.
+  Use this if you want to confirm the published-extension flow.
+
+Both paths share the same in-VS-Code verification steps once the
+session is running.
+
+## Path A — `make demo` (recommended)
+
+From the repo root:
+
+```bash
+make demo
+```
+
+This builds `build-dbg-on/ctldap/ctldap` if needed, writes a temp
+workspace to `/tmp/ctl-debug-vscode-demo/`, and launches VS Code with
+the extension loaded from source.  Two configs land in the Run-and-Debug
+dropdown: **Debug demo.ctl** (single file with `import "helper"`) and
+**Debug 2-stage chain** (two `.ctl` files chained).
+
+Skip to **Verify** below.
+
+## Path B — Manual install against your own .ctl
+
 Prerequisites:
-- ctldap built and on PATH (or specify full path in launch config)
+- ctldap built and on PATH (or its absolute path handy)
 - VS Code installed
 - The .vsix installed: `code --install-extension ctl-debug-0.1.0.vsix`
-
-## Steps
 
 1. Create or open a .ctl file:
 
@@ -19,104 +48,91 @@ Prerequisites:
        EOF
        code /tmp/smoke.ctl
 
-2. Open the Run and Debug panel (Cmd+Shift+D / Ctrl+Shift+D).
+2. Cmd-Shift-P → **CTL: Initialize debug configuration**.  The
+   extension picks the active `.ctl` file, auto-detects ctldap on
+   PATH or in `build*/ctldap/ctldap` (file picker if neither finds
+   it; the chosen path is saved to the `ctl.ctldapPath` setting),
+   writes a minimal `.vscode/launch.json`, and opens it for review.
 
-3. Click "create a launch.json file" and pick "CTL Single-Pixel Debugger".
+3. The `function` field defaults to `main`; for this fixture the
+   entrypoint is `smoke::main`, so edit the `function` line to match:
 
-4. Edit the generated launch.json.  `function` is needed here because
-   the smoke fixture's entrypoint is qualified as `smoke::main` (in a
-   namespace) — for an unqualified top-level `main`, omit `function`
-   entirely and the default is used:
+       "function": "smoke::main",
 
-       {
-           "type": "ctl",
-           "request": "launch",
-           "name": "Debug smoke::main",
-           "program": "${file}",
-           "function": "smoke::main",
-           "pixel": [1.5, 0, 0],
-           "ctldap": "/path/to/build-dbg-on/ctldap/ctldap"
-       }
+   (For an unqualified top-level `main`, the default works as-is and
+   you can omit `function` entirely.)
 
-5. Click in the gutter next to line 4 (`r = a + 1.0;`) to set a breakpoint.
+4. Note: there is **no `pixel` field** in the generated launch.json.
+   The pixel comes from the live status-bar picker (see Verify, step 1).
+   If you want this configuration to always use a specific value
+   regardless of the picker, add a `pixel` field by hand:
 
-6. Press F5 to start debugging.  The breakpoint icon should turn solid red.
+       "pixel": [1.5, 0, 0]
 
-7. Execution stops at line 4.  Expected:
-   - Variables panel shows `rIn=1.5`, `a=3` (and possibly more).
-   - Call Stack panel shows `smoke::main`.
-   - Hover over `a` in the source → tooltip shows `a = 3`.
+## Verify
 
-8. Press F10 (Step Over) → execution moves past the assignment.
-9. Press F5 (Continue) → function returns; debug session ends.
+These steps apply to both paths.
 
-If anything misbehaves, capture the output from "Debug Console" and the
-DAP traffic via VS Code's "Debug: Show Trace" (Cmd+Shift+P).
+1. Find the **CTL pixel** indicator in the bottom-left status bar —
+   a small color-swatch icon followed by `CTL pixel: 0.18, 0.18, 0.18`.
+   Click it and pick a non-default preset (e.g. **HDR over-range**).
+   The status-bar text updates immediately; that's what F5 will send.
+
+2. Click in the gutter on a line inside the function body to set a
+   breakpoint.  The breakpoint icon should turn solid red once the
+   debug session attaches; an unverified hollow icon is fine before
+   F5.
+
+3. Press F5.  Expected:
+   - Execution stops at the breakpoint.
+   - **Variables** panel shows the input args (e.g. `rIn` matching
+     your status-bar pixel) plus any locals that have been assigned
+     up to this line.
+   - **Call Stack** panel shows the function name (e.g. `smoke::main`).
+   - Hover over a variable in the source → tooltip shows its value.
+
+4. F10 (Step Over) → execution moves to the next line.
+   F11 (Step Into) on a function call → descends into the callee.
+   Shift-F11 (Step Out) → returns from the callee.
+   F5 (Continue) → runs to the next breakpoint or to termination.
+
+5. Iterate the pixel: stop the session, click the status-bar
+   indicator, pick a different value, F5 again.  No edits to
+   launch.json required.
+
+If anything misbehaves, capture the **Debug Console** output and the
+DAP traffic via VS Code's "Debug: Show Trace" (Cmd-Shift-P).  The
+ctldap server's stderr is also surfaced under View → Output → "Log
+(Extension Host)".
 
 ## Optional: chain test
 
-This section verifies that breakpoints fire in both stages of a two-file
-chain using the fixture transforms from `ctldap/tests/`.
+If you used `make demo`, this is already covered by the **Debug 2-stage
+chain** entry in the dropdown — switch to it and repeat the Verify
+steps above; breakpoints fire in both `stage1.ctl` and `stage2.ctl`.
 
-1. Locate the fixture files (created during the ctldap test suite build):
+To build a chain test against your own files, replace `program` /
+`function` with `programs` / `functions` arrays in your launch.json:
 
-       FIXTURES=$CTL_SOURCE_ROOT/ctldap/tests
-       # expected files:
-       #   $FIXTURES/run_chain_stage1.ctl
-       #   $FIXTURES/run_chain_stage2.ctl
+```json
+{
+    "type": "ctl",
+    "request": "launch",
+    "name": "chain smoke",
+    "programs": [
+        "${workspaceFolder}/stage1.ctl",
+        "${workspaceFolder}/stage2.ctl"
+    ],
+    "functions": ["stage1::main", "stage2::main"],
+    "modulePaths": ["${workspaceFolder}"]
+}
+```
 
-2. Open VS Code at the fixtures directory:
-
-       code $FIXTURES
-
-3. Create `.vscode/launch.json` in that folder:
-
-       {
-           "version": "0.2.0",
-           "configurations": [
-               {
-                   "type": "ctl",
-                   "request": "launch",
-                   "name": "chain smoke",
-                   "programs": [
-                       "${workspaceFolder}/run_chain_stage1.ctl",
-                       "${workspaceFolder}/run_chain_stage2.ctl"
-                   ],
-                   "functions": ["stage1::main", "stage2::main"],
-                   "pixel": [0.5, 0.5, 0.5],
-                   "ctldap": "/path/to/build-dbg-on/ctldap/ctldap",
-                   "stopOnEntry": false
-               }
-           ]
-       }
-
-   Adjust `ctldap` to the absolute path of your debug build.
-
-4. Open `run_chain_stage1.ctl` and set a breakpoint on its first
-   assignment line.
-
-5. Open `run_chain_stage2.ctl` and set a breakpoint on its first
-   assignment line.
-
-6. Press F5 to start the chain debug session.
-
-7. Expected — stage 1 fires first:
-   - Execution halts at the breakpoint in `run_chain_stage1.ctl`.
-   - Call Stack shows `stage1::main`.
-   - Variables panel shows the input pixel values.
-   - Press F5 (Continue).
-
-8. Expected — stage 2 fires next:
-   - Execution halts at the breakpoint in `run_chain_stage2.ctl`.
-   - Call Stack shows `stage2::main`.
-   - Variables panel shows the output of stage 1 as the new inputs.
-   - Press F5 (Continue) → session ends.
-
-If breakpoints do not fire in both files, check that the `programs` and
-`functions` arrays are parallel and that both files are saved before
-launching.
+Stage `N+1`'s inputs are bound from stage `N`'s outputs by exact name
+match (`rOut`→`rIn`, etc.).  Set a breakpoint in each stage; both
+should fire in order.  If they don't, double-check that both files are
+saved and that the `programs` and `functions` arrays are parallel.
 
 ## Known v1 limitations
 
-- One thread, one frame for variable inspection (deeper frames empty).
-- Watch expressions only support bare variable names.
+- Single-pixel only (N=1) — no batch/image debugging.

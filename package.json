@@ -57,19 +57,27 @@
                         },
                         "pixel": {
                             "type": "array",
-                            "description": "Pixel value to drive the function on (3 or 4 floats)",
-                            "items": { "type": "number" },
-                            "default": [0.5, 0.5, 0.5]
+                            "description": "Pixel value (3 or 4 floats).  If omitted, the live value from the status-bar pixel picker is used.  Specify here only if you want to LOCK this configuration to a specific pixel.",
+                            "items": { "type": "number" }
+                        },
+                        "params": {
+                            "type": "object",
+                            "description": "Uniform input bindings by name, e.g. {\"gain\": 1.5}",
+                            "additionalProperties": { "type": "number" }
                         },
                         "stopOnEntry": {
                             "type": "boolean",
                             "description": "Stop on the first executed instruction",
                             "default": false
                         },
+                        "pixelEvolution": {
+                            "type": "boolean",
+                            "description": "Emit a '→ paused name=[…]' Debug Console line at every pause summarising every color-shaped (float[3]/float[4]) local in scope.  Useful for watching the pipeline transform the pixel without scrolling the Variables panel.",
+                            "default": false
+                        },
                         "ctldap": {
                             "type": "string",
-                            "description": "Path to the ctldap binary",
-                            "default": "ctldap"
+                            "description": "Path to the ctldap binary (overrides the ctl.ctldapPath user setting for this configuration)"
                         }
                     }
                 }
@@ -81,7 +89,6 @@
                     "name": "Debug CTL (single file)",
                     "program": "${file}",
                     "function": "main",
-                    "pixel": [0.5, 0.5, 0.5],
                     "stopOnEntry": false
                 },
                 {
@@ -90,21 +97,71 @@
                     "name": "Debug ACES chain (IDT → RRT → ODT)",
                     "programs": ["${workspaceFolder}/IDT.ctl", "${workspaceFolder}/RRT.ctl", "${workspaceFolder}/ODT.ctl"],
                     "functions": ["IDT::main", "RRT::main", "ODT::main"],
-                    "pixel": [0.18, 0.18, 0.18],
                     "modulePaths": ["${workspaceFolder}/aces-dev/transforms/ctl/lib"],
                     "stopOnEntry": false
                 }
             ]
-        }]
+        }],
+        "configuration": {
+            "title": "CTL Debug",
+            "properties": {
+                "ctl.ctldapPath": {
+                    "type": "string",
+                    "default": "",
+                    "scope": "machine-overridable",
+                    "description": "Absolute path to the ctldap binary.  If empty, the extension auto-detects (PATH + common build dirs) on first use and prompts with a file picker if nothing is found.  A per-configuration `ctldap` field in launch.json overrides this."
+                },
+                "ctl.openProgramOnLaunch": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "When F5 starts a CTL debug session, open the .ctl file(s) referenced by the launch configuration's `program`/`programs` field.  Useful for chain configs where you'd otherwise have to hunt down each stage."
+                }
+            }
+        },
+        "commands": [
+            {
+                "command": "ctl.pickPixel",
+                "title": "Pick test pixel for F5…",
+                "category": "CTL"
+            },
+            {
+                "command": "ctl.initializeDebugConfiguration",
+                "title": "Initialize debug configuration",
+                "category": "CTL"
+            },
+            {
+                "command": "ctl.locateCtldap",
+                "title": "Locate ctldap binary…",
+                "category": "CTL"
+            },
+            {
+                "command": "ctl.addLaunchConfiguration",
+                "title": "Add launch configuration…",
+                "category": "CTL"
+            },
+            {
+                "command": "ctl.openConfigFiles",
+                "title": "Open files for a launch configuration…",
+                "category": "CTL"
+            }
+        ]
     },
     "activationEvents": [
         "onDebug",
-        "onLanguage:ctl"
+        "onLanguage:ctl",
+        "onCommand:ctl.pickPixel",
+        "onCommand:ctl.initializeDebugConfiguration",
+        "onCommand:ctl.locateCtldap",
+        "onCommand:ctl.addLaunchConfiguration",
+        "onCommand:ctl.openConfigFiles",
+        "workspaceContains:**/.vscode/launch.json",
+        "onStartupFinished"
     ],
     "scripts": {
         "vscode:prepublish": "npm run compile",
         "compile": "tsc -p ./",
-        "watch":   "tsc -watch -p ./"
+        "watch":   "tsc -watch -p ./",
+        "test":    "npm run compile && node test/inlineIdentifiers.test.js && node test/ctlRepoDetect.test.js && node test/colorSwatches.test.js"
     },
     "devDependencies": {
         "@types/node":    "^20.0.0",
