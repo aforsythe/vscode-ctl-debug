@@ -1,5 +1,28 @@
 # Changelog
 
+## Unreleased
+
+- **Syntax highlighting reworked from the ground up** to match the
+  CTL Manual §5.2 + §5.7 and the actual stdlib registration in
+  `lib/IlmCtlSimd/CtlSimdStdLib*.cpp`.  New scopes:
+  - Function definitions and call sites highlighted as
+    `entity.name.function`.
+  - Namespace prefixes (`helper::`, `stage1::`) as
+    `entity.name.namespace`.
+  - Operators, punctuation, namespace separator `::`, and member
+    accessor `.` get their own scopes (were unstyled).
+  - Stdlib functions (`pow`, `mult_f_f3`, `lookup1D`, `assert`,
+    `print_*`, color-space conversions, classification helpers,
+    matrix ops, …) tagged `support.function.builtin`.
+  - Stdlib constants (`M_PI`, `FLT_MAX`, `HALF_NAN`, …) tagged
+    `constant.language.stdlib`.
+  - Half literals (`1.2h`, `3e-02H`), hex (`0xFF`), and octal
+    (`0755`) integer literals recognised per §5.2.3.
+  - `ctlversion N;` directive and `import "..."` directive each
+    get their own scope.
+  - Reserved-but-unused keywords (`break`, `continue`) flagged as
+    `keyword.other.reserved` so authors notice they tried to use one.
+
 ## 0.1.0 (2026-04-25)
 
 Initial release.

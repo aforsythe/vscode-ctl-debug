@@ -1,45 +1,250 @@
 {
     "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
-    "name": "Color Transform Language",
+    "name": "Color Transformation Language",
     "scopeName": "source.ctl",
+
+    "//": [
+        "Pattern order matters — first match at a given position wins.",
+        "Comments + strings come first so their contents don't get re-parsed.",
+        "Keywords come before function-call so `if(` is the `if` keyword.",
+        "Keyword and function-name lists are sourced from:",
+        "  - The CTL Manual §5.2.1 (keywords) and §5.7 (standard library).",
+        "  - lib/IlmCtlSimd/CtlSimdStdLib*.cpp (the canonical registration).",
+        "Keep this grammar in sync when the language or stdlib evolves."
+    ],
+
     "patterns": [
         { "include": "#comments" },
-        { "include": "#keywords" },
-        { "include": "#types"    },
-        { "include": "#numbers"  },
-        { "include": "#strings"  }
+        { "include": "#strings" },
+        { "include": "#ctlversion-directive" },
+        { "include": "#import-directive" },
+        { "include": "#namespace-prefix" },
+        { "include": "#stdlib-constants" },
+        { "include": "#stdlib-functions" },
+        { "include": "#control-keywords" },
+        { "include": "#reserved-keywords" },
+        { "include": "#modifier-keywords" },
+        { "include": "#print-keyword" },
+        { "include": "#type-keywords" },
+        { "include": "#boolean-literals" },
+        { "include": "#function-definition" },
+        { "include": "#function-call" },
+        { "include": "#numbers" },
+        { "include": "#operators" },
+        { "include": "#punctuation" }
     ],
+
     "repository": {
+
         "comments": {
             "patterns": [
-                { "name": "comment.line.double-slash.ctl",  "match": "//.*$" },
-                { "name": "comment.block.ctl", "begin": "/\\*", "end": "\\*/" }
+                { "name": "comment.line.double-slash.ctl",
+                  "match": "//.*$" },
+                { "name": "comment.block.ctl",
+                  "begin": "/\\*", "end": "\\*/" }
             ]
         },
-        "keywords": {
-            "patterns": [{
-                "name": "keyword.control.ctl",
-                "match": "\\b(if|else|for|while|return|namespace|input|output|uniform|varying|const|true|false|import)\\b"
-            }]
-        },
-        "types": {
-            "patterns": [{
-                "name": "support.type.ctl",
-                "match": "\\b(void|bool|int|unsigned|half|float|string|struct)\\b"
-            }]
-        },
-        "numbers": {
-            "patterns": [{
-                "name": "constant.numeric.ctl",
-                "match": "\\b\\d+(\\.\\d+)?([eE][+-]?\\d+)?\\b"
-            }]
-        },
+
         "strings": {
             "patterns": [{
                 "name": "string.quoted.double.ctl",
                 "begin": "\"", "end": "\"",
-                "patterns": [{ "name": "constant.character.escape.ctl", "match": "\\\\." }]
+                "patterns": [{
+                    "name":  "constant.character.escape.ctl",
+                    "match": "\\\\."
+                }]
             }]
+        },
+
+        "ctlversion-directive": {
+            "//": "Per CTL Manual §5.3.4: `ctlversion <intLiteral> ;` at the top of a module.",
+            "match": "\\b(ctlversion)\\b\\s+(\\d+)",
+            "captures": {
+                "1": { "name": "keyword.control.directive.ctlversion.ctl" },
+                "2": { "name": "constant.numeric.integer.ctl" }
+            }
+        },
+
+        "import-directive": {
+            "//": "Per CTL Manual §5.3.3: `import <stringLiteral> ;`",
+            "match": "\\b(import)\\b",
+            "name": "keyword.control.import.ctl"
+        },
+
+        "namespace-prefix": {
+            "//": "Identifier followed by `::` is a namespace token.  `helper::soft_clip(...)` highlights `helper` as namespace and `soft_clip` falls through to function-call.",
+            "match": "\\b([A-Za-z_][A-Za-z0-9_]*)\\s*(?=::)",
+            "captures": {
+                "1": { "name": "entity.name.namespace.ctl" }
+            }
+        },
+
+        "stdlib-constants": {
+            "//": "From CTL Manual §5.7.1 + lib/IlmCtlSimd/CtlSimdStdLibLimits.cpp.",
+            "match": "\\b(M_E|M_PI|FLT_MAX|FLT_MIN|FLT_EPSILON|FLT_POS_INF|FLT_NEG_INF|FLT_NAN|HALF_MAX|HALF_MIN|HALF_EPSILON|HALF_POS_INF|HALF_NEG_INF|HALF_NAN|INT_MAX|INT_MIN|UINT_MAX)\\b",
+            "name": "constant.language.stdlib.ctl"
+        },
+
+        "stdlib-functions": {
+            "//": "From CTL Manual §5.7 + lib/IlmCtlSimd/CtlSimdStdLib*.cpp.  Listed alphabetically inside each group for ease of upkeep.",
+            "patterns": [
+                {
+                    "//": "Floating-point classification (§5.7.2)",
+                    "match": "\\b(isfinite_f|isfinite_h|isinf_f|isinf_h|isnan_f|isnan_h|isnormal_f|isnormal_h)\\b(?=\\s*\\()",
+                    "name": "support.function.builtin.ctl"
+                },
+                {
+                    "//": "Elementary math (§5.7.3)",
+                    "match": "\\b(acos|asin|atan|atan2|cos|cosh|exp|exp_h|fabs|floor|fmod|hypot|log|log_h|log10|log10_h|pow|pow_h|pow10|pow10_h|sin|sinh|sqrt|tan|tanh)\\b(?=\\s*\\()",
+                    "name": "support.function.builtin.ctl"
+                },
+                {
+                    "//": "Vector / matrix ops (§5.7.4)",
+                    "match": "\\b(add_f3_f3|add_f33_f33|add_f44_f44|sub_f3_f3|cross_f3_f3|dot_f3_f3|length_f3|mult_f_f3|mult_f_f33|mult_f_f44|mult_f3_f33|mult_f3_f44|mult_f33_f33|mult_f44_f44|invert_f33|invert_f44|transpose_f33|transpose_f44)\\b(?=\\s*\\()",
+                    "name": "support.function.builtin.ctl"
+                },
+                {
+                    "//": "Lookup tables / interpolation (§5.7.5)",
+                    "match": "\\b(interpolate1D|interpolateCubic1D|lookup1D|lookupCubic1D|lookup3D_f|lookup3D_f3|lookup3D_h|scatteredDataToGrid3D)\\b(?=\\s*\\()",
+                    "name": "support.function.builtin.ctl"
+                },
+                {
+                    "//": "Color-space conversions (§5.7.6)",
+                    "match": "\\b(RGBtoXYZ|XYZtoRGB|LabtoXYZ|XYZtoLab|LuvtoXYZ|XYZtoLuv)\\b(?=\\s*\\()",
+                    "name": "support.function.builtin.ctl"
+                },
+                {
+                    "//": "Assertion + print debug helpers",
+                    "match": "\\b(assert|print_bool|print_int|print_unsigned_int|print_half|print_float|print_string)\\b(?=\\s*\\()",
+                    "name": "support.function.builtin.ctl"
+                }
+            ]
+        },
+
+        "control-keywords": {
+            "//": "Used flow-control keywords from CTL Manual §5.2.1 + §5.5.",
+            "match": "\\b(if|else|for|while|return)\\b",
+            "name": "keyword.control.ctl"
+        },
+
+        "reserved-keywords": {
+            "//": "Reserved per CTL Manual §5.2.1 but rejected by the parser.  Highlight so authors notice they tried to use one.",
+            "match": "\\b(break|continue)\\b",
+            "name": "keyword.other.reserved.ctl"
+        },
+
+        "modifier-keywords": {
+            "//": "Storage / parameter / declaration modifiers and structural keywords.",
+            "match": "\\b(const|input|output|uniform|varying|namespace|struct)\\b",
+            "name": "storage.modifier.ctl"
+        },
+
+        "print-keyword": {
+            "//": "Per CTL Manual §5.5.8 `print` is a statement keyword (not a function), but it's spelled `print(...)`.  Tag it as keyword so it doesn't fall through to function-call coloring.",
+            "match": "\\b(print)\\b(?=\\s*\\()",
+            "name": "keyword.other.print.ctl"
+        },
+
+        "type-keywords": {
+            "//": "Fundamental types (§5.3.9.1) plus reserved type name `string` (§5.2.1).",
+            "match": "\\b(void|bool|int|unsigned|short|long|signed|half|float|string)\\b",
+            "name": "support.type.primitive.ctl"
+        },
+
+        "boolean-literals": {
+            "match": "\\b(true|false)\\b",
+            "name": "constant.language.boolean.ctl"
+        },
+
+        "function-definition": {
+            "//": "Match `<type>[...]?  <name>  (` — name is the function being defined.  Type can be a primitive (lowercase), an array suffix `[N]`/`[]`, or a user struct (CamelCase identifier).",
+            "match": "\\b(void|bool|int|unsigned|short|long|signed|half|float|string|[A-Z][A-Za-z0-9_]*)\\s*((?:\\[[^\\]]*\\])*)\\s+([a-zA-Z_][A-Za-z0-9_]*)\\s*(?=\\()",
+            "captures": {
+                "1": { "name": "support.type.ctl" },
+                "3": { "name": "entity.name.function.ctl" }
+            }
+        },
+
+        "function-call": {
+            "//": "Catch-all for user function calls.  Keywords / stdlib already matched above so they don't reach here.",
+            "match": "\\b([a-zA-Z_][A-Za-z0-9_]*)\\s*(?=\\()",
+            "captures": {
+                "1": { "name": "entity.name.function.call.ctl" }
+            }
+        },
+
+        "numbers": {
+            "patterns": [
+                {
+                    "//": "Half literals — digits with `h` or `H` suffix (CTL Manual §5.2.3.3).  Must check before float so the suffix doesn't get split off.",
+                    "match": "\\b\\d+\\.\\d+([eE][+-]?\\d+)?[hH]\\b",
+                    "name": "constant.numeric.half.ctl"
+                },
+                {
+                    "match": "\\b\\d+[eE][+-]?\\d+[hH]\\b",
+                    "name": "constant.numeric.half.ctl"
+                },
+                {
+                    "match": "\\b\\d+[hH]\\b",
+                    "name": "constant.numeric.half.ctl"
+                },
+                {
+                    "//": "Hex integer literals (§5.2.3.1).",
+                    "match": "\\b0[xX][0-9a-fA-F]+\\b",
+                    "name": "constant.numeric.integer.hex.ctl"
+                },
+                {
+                    "//": "Octal — leading 0 followed by 0-7 digits (C-style).  No 8 or 9.",
+                    "match": "\\b0[0-7]+\\b",
+                    "name": "constant.numeric.integer.octal.ctl"
+                },
+                {
+                    "//": "Float literals (§5.2.3.2): digits + `.` + digits, optional exponent.  No F/L suffix in CTL.",
+                    "match": "\\b\\d+\\.\\d+([eE][+-]?\\d+)?\\b",
+                    "name": "constant.numeric.float.ctl"
+                },
+                {
+                    "//": "Float starting with `.` (e.g. `.02`)",
+                    "match": "(?<![A-Za-z0-9_])\\.\\d+([eE][+-]?\\d+)?\\b",
+                    "name": "constant.numeric.float.ctl"
+                },
+                {
+                    "//": "Float with exponent but no decimal (e.g. `1e3`)",
+                    "match": "\\b\\d+[eE][+-]?\\d+\\b",
+                    "name": "constant.numeric.float.ctl"
+                },
+                {
+                    "//": "Decimal integer literal — last so the more specific patterns above win.",
+                    "match": "\\b\\d+\\b",
+                    "name": "constant.numeric.integer.decimal.ctl"
+                }
+            ]
+        },
+
+        "operators": {
+            "//": "Punctuators that act as operators (CTL Manual §5.2.2).  CTL has a restricted set: no ++, --, ?:, compound assignment, etc.",
+            "patterns": [
+                { "match": "(==|!=|<=|>=|<<|>>|&&|\\|\\||<|>)",
+                  "name":  "keyword.operator.comparison.ctl" },
+                { "match": "(\\+|-|\\*|/|%)",
+                  "name":  "keyword.operator.arithmetic.ctl" },
+                { "match": "(=)",
+                  "name":  "keyword.operator.assignment.ctl" },
+                { "match": "(!|~|\\^|&|\\|)",
+                  "name":  "keyword.operator.bitwise.ctl" }
+            ]
+        },
+
+        "punctuation": {
+            "patterns": [
+                { "match": "::",   "name": "punctuation.separator.namespace.ctl" },
+                { "match": "\\.",  "name": "punctuation.accessor.member.ctl" },
+                { "match": ",",    "name": "punctuation.separator.comma.ctl" },
+                { "match": ";",    "name": "punctuation.terminator.statement.ctl" },
+                { "match": "\\{|\\}", "name": "punctuation.section.block.ctl" },
+                { "match": "\\(|\\)", "name": "punctuation.section.parens.ctl" },
+                { "match": "\\[|\\]", "name": "punctuation.section.brackets.ctl" }
+            ]
         }
     }
 }
