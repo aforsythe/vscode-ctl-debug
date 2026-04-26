@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+- **README rewritten for the Marketplace** — leads with a hero
+  shot, a one-paragraph pitch, and a 5-step quickstart instead of a
+  feature wall.  Each major capability has its own callout with a
+  screenshot beneath it.  Technical reference (launch.json table,
+  settings, multi-stage chain syntax) demoted to the second half of
+  the document.  See [`media/README.md`](media/README.md) for the
+  list of screenshots that need to be captured before the first
+  release tag — the README references them by relative path so they
+  drop in without further edits.
+- `package.json` declares `icon: media/icon.png` for the
+  Marketplace listing.
+- Default branch is `main` (CI workflows updated).
 - **Grammar snapshot tests** (`tests/grammar/`) — three real ACES
   library files (`Lib.Academy.Tonescale`, `Lib.Academy.ColorSpaces`,
   `Lib.Academy.Utilities`) tokenised through the grammar and

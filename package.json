@@ -19,6 +19,7 @@
         "Debuggers",
         "Programming Languages"
     ],
+    "icon": "media/icon.png",
     "main": "./out/extension.js",
     "contributes": {
         "grammars": [

@@ -14,3 +14,7 @@ docs/**
 **/*.ts
 CONTRIBUTING.md
 scripts/**
+# media/ images SHIP in the .vsix because the Marketplace renders
+# README.md and needs to find them.  Only the dev-only README in
+# media/ is excluded.
+media/README.md
