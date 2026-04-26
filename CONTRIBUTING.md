@@ -52,7 +52,7 @@ runtime — that means CI is fast (no Electron download) and tests can
 run anywhere Node 20 does.
 
 End-to-end behavior of the extension itself is exercised by
-`vscode-ctl/SMOKE_TEST.md` (manual) and indirectly by the headless
+[`docs/MANUAL_TESTING.md`](docs/MANUAL_TESTING.md) (manual) and indirectly by the headless
 DAP scenarios in the CTL repo
 (`ctldap/tests/run_demo_scenarios.py`).
 

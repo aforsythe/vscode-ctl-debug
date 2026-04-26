@@ -25,6 +25,8 @@
 set -e
 
 HERE="$(cd "$(dirname "$0")" && pwd)"
+# The extension root is one level up — this script lives in scripts/.
+EXT_ROOT="$(cd "$HERE/.." && pwd)"
 WS="/tmp/ctl-debug-vscode-demo"
 
 # Find ctldap, in priority order:
@@ -39,7 +41,7 @@ while [ "$#" -gt 0 ]; do
         --ctldap=*) CTLDAP="${1#*=}"; shift ;;
         -h|--help)
             cat <<EOF
-usage: launch-demo.sh [--ctldap PATH]
+usage: scripts/launch-demo.sh [--ctldap PATH]
 
 Launches VS Code with this extension loaded from source against a
 temp workspace pre-wired with sample CTL fixtures.
@@ -87,15 +89,15 @@ EOF
 fi
 
 echo "== ctl-debug VS Code demo launcher =="
-echo "  extension: $HERE"
+echo "  extension: $EXT_ROOT"
 echo "  ctldap:    $CTLDAP"
 echo "  workspace: $WS"
 echo
 
 # 2. Compile the TS extension if needed.
-if [ ! -f "$HERE/out/extension.js" ]; then
+if [ ! -f "$EXT_ROOT/out/extension.js" ]; then
     echo "extension TS not compiled; running npm install + compile..."
-    (cd "$HERE" && npm install 2>&1 | tail -3 && npm run compile 2>&1 | tail -3)
+    (cd "$EXT_ROOT" && npm install 2>&1 | tail -3 && npm run compile 2>&1 | tail -3)
     echo
 fi
 
@@ -597,4 +599,4 @@ echo
 : > /tmp/ctldap-trace.log
 export CTLDAP_TRACE=/tmp/ctldap-trace.log
 
-exec code --extensionDevelopmentPath="$HERE" --disable-extensions "$WS" "$WS/demo.ctl"
+exec code --extensionDevelopmentPath="$EXT_ROOT" --disable-extensions "$WS" "$WS/demo.ctl"

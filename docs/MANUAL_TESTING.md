@@ -8,8 +8,8 @@ There are two ways to verify the extension works end-to-end:
   launch.json, and launches VS Code in Extension Development Host
   mode pointing at this extension's source tree.  Jump to **Verify**
   below.
-- **Standalone (this repo)** — run `./launch-demo.sh` from the
-  extension repo root with a built ctldap available
+- **Standalone (this repo)** — run `./scripts/launch-demo.sh` from
+  the extension repo root with a built ctldap available
   (`--ctldap PATH`, `CTLDAP=...` env, or on `$PATH`).  Same
   end-to-end behavior as `make demo` from CTL.
 - **Manual install** — package the .vsix and install it into your

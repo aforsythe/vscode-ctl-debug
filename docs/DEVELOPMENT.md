@@ -92,7 +92,7 @@ What's NOT covered by `npm test`:
 - The DAP wire protocol (covered by `ctldap/tests/run_demo_scenarios.py`
   in the CTL repo).
 - The actual rendering of inline values, swatches, and the Variables
-  panel (manual verification via the `SMOKE_TEST.md` flow).
+  panel (manual verification via the [MANUAL_TESTING.md](MANUAL_TESTING.md) flow).
 
 For a quick smoke without `make demo`, F5 from this folder in VS
 Code (the `.vscode/launch.json` config opens a pristine Extension
@@ -111,9 +111,9 @@ See the `## Releasing` section in `CONTRIBUTING.md`.
 - `src/ctlRepoDetect.ts` — pure helper.
 - `test/` — Node-based unit tests for the pure helpers.
 - `syntaxes/` — TextMate grammar for `.ctl` files.
-- `launch-demo.sh` — developer convenience: spawn an Extension
-  Development Host against a temp workspace with sample fixtures
-  pre-wired.  Requires either `CTLDAP=/path/to/ctldap` env var or
-  the `--ctldap PATH` flag.
+- `scripts/launch-demo.sh` — developer convenience: spawn an
+  Extension Development Host against a temp workspace with sample
+  fixtures pre-wired.  Requires either `CTLDAP=/path/to/ctldap` env
+  var or the `--ctldap PATH` flag.
 - `CHANGELOG.md` — Keep-a-Changelog format.
-- `SMOKE_TEST.md` — manual end-to-end verification flow.
+- `docs/MANUAL_TESTING.md` — manual end-to-end verification flow.

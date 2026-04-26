@@ -12,6 +12,5 @@ docs/**
 **/tsconfig.json
 **/*.map
 **/*.ts
-SMOKE_TEST.md
 CONTRIBUTING.md
-launch-demo.sh
+scripts/**

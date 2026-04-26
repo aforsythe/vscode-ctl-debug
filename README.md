@@ -129,7 +129,7 @@ or by hand-editing launch.json.
 To re-pick or move ctldap later: **CTL: Locate ctldap binary…** writes
 the new path to user settings.
 
-See `SMOKE_TEST.md` for a step-by-step verification flow.
+See [`docs/MANUAL_TESTING.md`](docs/MANUAL_TESTING.md) for a step-by-step verification flow.
 
 ## launch.json reference
 

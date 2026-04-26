@@ -14,7 +14,7 @@ Thanks for the PR!  A few quick checks:
 ## How tested
 
 <!-- `npm test` output, manual smoke steps, or both.  Link to a
-     SMOKE_TEST.md section if applicable. -->
+     docs/MANUAL_TESTING.md section if applicable. -->
 
 ## Checklist
 
