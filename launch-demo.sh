@@ -25,26 +25,72 @@
 set -e
 
 HERE="$(cd "$(dirname "$0")" && pwd)"
-WORKTREE="$(cd "$HERE/.." && pwd)"
-BUILD="$WORKTREE/build-dbg-on"
-CTLDAP="$BUILD/ctldap/ctldap"
 WS="/tmp/ctl-debug-vscode-demo"
 
+# Find ctldap, in priority order:
+#   1. --ctldap PATH on the command line
+#   2. CTLDAP env var
+#   3. ctldap on $PATH
+#   4. Common build-dir locations relative to CTL_SRC (if set)
+CTLDAP=""
+while [ "$#" -gt 0 ]; do
+    case "$1" in
+        --ctldap) CTLDAP="$2"; shift 2 ;;
+        --ctldap=*) CTLDAP="${1#*=}"; shift ;;
+        -h|--help)
+            cat <<EOF
+usage: launch-demo.sh [--ctldap PATH]
+
+Launches VS Code with this extension loaded from source against a
+temp workspace pre-wired with sample CTL fixtures.
+
+The script needs a working \`ctldap\` binary.  Resolution order:
+  --ctldap PATH                explicit override
+  \$CTLDAP                      env var
+  \`command -v ctldap\`         on \$PATH
+  \$CTL_SRC/build-dbg-on/ctldap/ctldap  CTL repo build dir
+
+Build ctldap from the CTL repo (https://github.com/ampas/CTL):
+  cmake -B build-dbg-on -DCMAKE_BUILD_TYPE=Debug -DCTL_ENABLE_DEBUGGER=ON
+  cmake --build build-dbg-on --target ctldap -j8
+EOF
+            exit 0 ;;
+        *) echo "unknown arg: $1"; exit 2 ;;
+    esac
+done
+
+if [ -z "$CTLDAP" ]; then CTLDAP="${CTLDAP:-}"; fi   # honor env
+if [ -z "$CTLDAP" ]; then CTLDAP="$(command -v ctldap || true)"; fi
+if [ -z "$CTLDAP" ] && [ -n "$CTL_SRC" ]; then
+    for sub in build-dbg-on/ctldap/ctldap build-dbg/ctldap/ctldap build/ctldap/ctldap; do
+        candidate="$CTL_SRC/$sub"
+        if [ -x "$candidate" ]; then CTLDAP="$candidate"; break; fi
+    done
+fi
+
+if [ -z "$CTLDAP" ] || [ ! -x "$CTLDAP" ]; then
+    cat >&2 <<EOF
+ctldap binary not found.
+
+Pass it explicitly:
+    $0 --ctldap /path/to/ctldap
+
+Or set the CTLDAP env var:
+    CTLDAP=/path/to/ctldap $0
+
+Or build it from the CTL repo (https://github.com/ampas/CTL):
+    cmake -B build-dbg-on -DCMAKE_BUILD_TYPE=Debug -DCTL_ENABLE_DEBUGGER=ON
+    cmake --build build-dbg-on --target ctldap -j8
+    CTL_SRC=\$(pwd) $0
+EOF
+    exit 1
+fi
+
 echo "== ctl-debug VS Code demo launcher =="
-echo "  worktree: $WORKTREE"
-echo "  ctldap:   $CTLDAP"
+echo "  extension: $HERE"
+echo "  ctldap:    $CTLDAP"
 echo "  workspace: $WS"
 echo
-
-# 1. Build ctldap if needed.
-if [ ! -x "$CTLDAP" ]; then
-    echo "ctldap not found; building..."
-    cmake -B "$BUILD" -S "$WORKTREE" \
-        -DCMAKE_BUILD_TYPE=Debug -DCTL_ENABLE_DEBUGGER=ON 2>&1 | tail -3
-    cmake --build "$BUILD" --target ctldap -j8 2>&1 | tail -3
-    [ -x "$CTLDAP" ] || { echo "build failed"; exit 1; }
-    echo
-fi
 
 # 2. Compile the TS extension if needed.
 if [ ! -f "$HERE/out/extension.js" ]; then

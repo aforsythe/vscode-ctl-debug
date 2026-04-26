@@ -2,20 +2,26 @@
 
 There are two ways to verify the extension works end-to-end:
 
-- **Quickest** — `make demo` from the repo root.  No .vsix install,
-  no setup; the script builds ctldap, generates a workspace with
-  pre-wired launch.json, and launches VS Code in Extension Development
-  Host mode pointing at the source tree.  Jump to **Verify** below.
+- **Quickest** — `make demo` from the [CTL repo](https://github.com/ampas/CTL)
+  root (with the `feature/ctl-debugger` branch checked out — soon
+  `master`).  Builds ctldap, generates a workspace with pre-wired
+  launch.json, and launches VS Code in Extension Development Host
+  mode pointing at this extension's source tree.  Jump to **Verify**
+  below.
+- **Standalone (this repo)** — run `./launch-demo.sh` from the
+  extension repo root with a built ctldap available
+  (`--ctldap PATH`, `CTLDAP=...` env, or on `$PATH`).  Same
+  end-to-end behavior as `make demo` from CTL.
 - **Manual install** — package the .vsix and install it into your
   primary VS Code instance, then drive it against your own files.
   Use this if you want to confirm the published-extension flow.
 
-Both paths share the same in-VS-Code verification steps once the
-session is running.
+All three paths share the same in-VS-Code verification steps once
+the session is running.
 
-## Path A — `make demo` (recommended)
+## Path A — `make demo` from the CTL repo (recommended)
 
-From the repo root:
+From the CTL repo root:
 
 ```bash
 make demo
@@ -25,7 +31,7 @@ This builds `build-dbg-on/ctldap/ctldap` if needed, writes a temp
 workspace to `/tmp/ctl-debug-vscode-demo/`, and launches VS Code with
 the extension loaded from source.  Two configs land in the Run-and-Debug
 dropdown: **Debug demo.ctl** (single file with `import "helper"`) and
-**Debug 2-stage chain** (two `.ctl` files chained).
+**Debug 3-stage chain** (three `.ctl` files chained).
 
 Skip to **Verify** below.
 

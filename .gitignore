@@ -1,3 +1,15 @@
+# Dependencies
 node_modules/
+
+# TypeScript build output
 out/
+
+# Packaged extension artifacts (built by vsce; uploaded to GitHub releases)
 *.vsix
+
+# VS Code test runner cache
+.vscode-test/
+
+# OS / editor noise
+.DS_Store
+*.log

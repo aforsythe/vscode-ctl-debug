@@ -1,0 +1,58 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*.*.*']
+
+# Single concurrency group keyed on the tag so re-pushing a tag
+# doesn't fight an in-flight release.
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    name: Build .vsix · publish to Marketplace · GitHub Release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write    # needed to attach the .vsix to a GitHub Release
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+      - run: npm run compile
+      - run: npm test
+
+      - name: Verify tag matches package.json version
+        run: |
+          PKG_VERSION=$(node -p "require('./package.json').version")
+          TAG_VERSION="${GITHUB_REF_NAME#v}"
+          if [ "$PKG_VERSION" != "$TAG_VERSION" ]; then
+            echo "::error::tag $GITHUB_REF_NAME does not match package.json version $PKG_VERSION"
+            exit 1
+          fi
+
+      - name: Package .vsix
+        run: npx --yes @vscode/vsce package --no-yarn
+
+      - name: Publish to VS Code Marketplace
+        # Only publishes if VSCE_PAT secret is set.  Otherwise the
+        # release still attaches the .vsix to the GitHub Release so
+        # users can install it manually.
+        if: ${{ secrets.VSCE_PAT != '' }}
+        env:
+          VSCE_PAT: ${{ secrets.VSCE_PAT }}
+        run: npx --yes @vscode/vsce publish --no-yarn --pat "$VSCE_PAT"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: '*.vsix'
+          generate_release_notes: true
+          fail_on_unmatched_files: true

@@ -4,9 +4,13 @@
     "description": "Single-pixel debugger for CTL color transform language modules",
     "version": "0.1.0",
     "publisher": "ctl-org",
+    "license": "Apache-2.0",
     "repository": {
         "type": "git",
-        "url": "https://github.com/ampas/CTL"
+        "url": "https://github.com/aswf/vscode-ctl"
+    },
+    "bugs": {
+        "url": "https://github.com/aswf/vscode-ctl/issues"
     },
     "engines": { "vscode": "^1.80.0" },
     "categories": ["Debuggers", "Programming Languages"],

@@ -43,20 +43,26 @@ integrated into VS Code via the Debug Adapter Protocol.
 
 ## Requirements
 
-- The `ctldap` binary built from this repository (CTL with
-  `-DCTL_ENABLE_DEBUGGER=ON`).  The extension auto-detects it on PATH
-  and in common build directories on first use.  When the workspace
-  is itself a CTL source checkout, the extension can build ctldap
-  for you with one click; otherwise it falls back to a one-time file
-  picker.  No manual configuration is required for the common case.
+- The `ctldap` binary, built from the [CTL
+  repo](https://github.com/ampas/CTL) with
+  `-DCTL_ENABLE_DEBUGGER=ON`.  The extension auto-detects it on `PATH`
+  and in common build directories on first use.  If your VS Code
+  workspace happens to be a CTL source checkout, the extension can
+  build ctldap for you with one click; otherwise it falls back to a
+  one-time file picker (the path is then saved to the
+  `ctl.ctldapPath` setting).  No manual configuration is required
+  for the common case.
 
 ## Quickstart
 
-> **Just kicking the tires?**  From the repo root run `make demo`.
-> It builds ctldap, generates a temp workspace with two ready-to-debug
-> CTL fixtures (single-file + 2-stage chain), and launches VS Code in
-> Extension Development Host mode.  No install, no .vsix, no manual
-> launch.json.  Skip ahead to step 3 below for the in-VS-Code flow.
+> **Just kicking the tires?**  Clone the [CTL
+> repo](https://github.com/ampas/CTL) (the `feature/ctl-debugger`
+> branch — soon `master`) and run `make demo` from its root.  It
+> builds `ctldap`, generates a temp workspace with two ready-to-debug
+> CTL fixtures (single-file + multi-stage chain), and launches VS
+> Code in Extension Development Host mode using this extension's
+> source tree.  No `.vsix` install, no manual `launch.json`.  Skip
+> ahead to step 3 below for the in-VS-Code flow.
 
 The fast path for your own project:
 

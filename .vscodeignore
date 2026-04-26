@@ -1,8 +1,17 @@
+# Files NOT to ship inside the .vsix package.  Source, dev tooling,
+# CI, tests, and docs that aren't relevant to runtime stay out.
 .vscode/**
 .vscode-test/**
+.github/**
 src/**
+test/**
+docs/**
 .gitignore
 .eslintrc.js
+.editorconfig
 **/tsconfig.json
 **/*.map
 **/*.ts
+SMOKE_TEST.md
+CONTRIBUTING.md
+launch-demo.sh
