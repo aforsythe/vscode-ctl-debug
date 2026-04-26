@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+- **Placeholder screenshots + capture script** — `media/` now ships
+  with dark-themed placeholder PNGs at the spec'd dimensions plus a
+  real (generated-from-SVG) `icon.png`, so the README, GitHub repo
+  preview, and Marketplace listing render cleanly before any real
+  screenshots have been taken.  `scripts/capture-screenshots.sh`
+  walks the developer through each shot — sequences scenes, prompts
+  for setup, drives `screencapture -i -W`, saves PNGs straight to
+  `media/` at the correct filename.  Re-run with a name to redo
+  just one shot.
 - **README rewritten for the Marketplace** — leads with a hero
   shot, a one-paragraph pitch, and a 5-step quickstart instead of a
   feature wall.  Each major capability has its own callout with a

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  CTL Debug — extension icon.
+  Three overlapping additive primaries (red, green, blue) read as
+  "color tooling" at any size; the small white play arrow overlay
+  reads as "debug tool".  Rendered to media/icon.png at 128×128 for
+  the Marketplace listing.
+  License: Apache-2.0 (matches the extension).
+-->
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+
+  <!-- Rounded-square background.  Slight blue tint distinguishes the
+       icon from VS Code's neutral-dark debug icon at small sizes. -->
+  <rect x="0" y="0" width="128" height="128" rx="22" ry="22" fill="#1a1d2e"/>
+
+  <!--
+    Additive RGB primaries — three circles arranged so their centers
+    form an equilateral triangle around the canvas centre.  Each is
+    drawn with `screen` blend so overlaps light up as cyan / magenta
+    / yellow and the very center reads white.  Filter applied to the
+    group so individual circles remain at full intensity outside the
+    overlap region.
+  -->
+  <g style="mix-blend-mode: screen;">
+    <!-- Red — top-left -->
+    <circle cx="50" cy="46" r="32" fill="#ff2d2d"/>
+    <!-- Green — top-right -->
+    <circle cx="78" cy="46" r="32" fill="#1ed760"/>
+    <!-- Blue — bottom -->
+    <circle cx="64" cy="76" r="32" fill="#2d6dff"/>
+  </g>
+
+  <!--
+    Debug play arrow — pinned to the bottom-right corner so it reads
+    as an overlay on top of the color mark, not part of it.  White
+    fill gives high contrast against the dark bg.
+  -->
+  <g transform="translate(82, 86)">
+    <circle cx="14" cy="14" r="16" fill="#1a1d2e"/>
+    <polygon points="9,5 24,14 9,23" fill="#ffffff"/>
+  </g>
+</svg>

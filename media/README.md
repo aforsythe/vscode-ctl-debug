@@ -38,7 +38,39 @@ installing.  Pack it with the things only this extension does:
 Use `demo.ctl` from the CTL repo's `make demo` workspace — it's
 designed for exactly this.
 
-## How to capture
+## Status: placeholders shipped, real captures pending
+
+The `.png` files committed here right now are dark-themed
+placeholders generated programmatically (filename + dimensions +
+"TODO" watermark).  They exist so the README, the GitHub repo
+preview, and the Marketplace listing all render cleanly during
+bring-up — broken-image icons everywhere would look worse than a
+"placeholder · capture this" hint.
+
+Replace each one with a real screenshot before the first release tag.
+
+## How to capture (the easy way)
+
+A guided script handles everything except the actual mouse-click:
+
+```sh
+./scripts/capture-screenshots.sh
+```
+
+It launches the Extension Development Host once, then for each shot
+prints what to set up in VS Code, waits for ENTER, and invokes
+`screencapture -i -W` (cursor turns into a camera; click the window).
+PNGs save directly to `media/` at the right filename and overwrite
+the placeholders.
+
+To redo just one shot after the initial pass:
+
+```sh
+./scripts/capture-screenshots.sh hero          # just the hero
+./scripts/capture-screenshots.sh watch-panel pixel-picker   # multiple
+```
+
+## How to capture (manually)
 
 1. Run `make demo` from the CTL repo (or `./scripts/launch-demo.sh`
    from this repo with a built ctldap).
@@ -56,6 +88,22 @@ designed for exactly this.
 3. Move into `media/`, rename to match the table above.
 4. Trim if needed (`sips -c 1100 1920 hero.png`) and consider
    shrinking with `tinypng.com` to keep the .vsix slim.
+
+## Icon
+
+`icon.png` is a real (not-placeholder) 128×128 generated from
+`icon.svg` via `sips`.  Three additive RGB primaries with a debug
+play-arrow overlay — recognisable at 16px, color-themed, debug-
+themed.  Replace if you'd rather a designed mark; the shape is just
+a placeholder until someone with a stronger visual brand identity
+takes a pass.
+
+To regenerate from the SVG:
+
+```sh
+sips -s format png media/icon.svg --out media/icon.png
+sips -z 128 128 media/icon.png
+```
 
 ## Marketplace gotcha
 

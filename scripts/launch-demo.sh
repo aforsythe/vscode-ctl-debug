@@ -50,7 +50,9 @@ The script needs a working \`ctldap\` binary.  Resolution order:
   --ctldap PATH                explicit override
   \$CTLDAP                      env var
   \`command -v ctldap\`         on \$PATH
-  \$CTL_SRC/build-dbg-on/ctldap/ctldap  CTL repo build dir
+  ctl.ctldapPath               in VS Code user settings.json
+  \$CTL_SRC/build*/ctldap/ctldap         (under CTL_SRC if set)
+  ~/Source/CTL, ~/CTL, ~/src/CTL        common clone locations
 
 Build ctldap from the CTL repo (https://github.com/ampas/CTL):
   cmake -B build-dbg-on -DCMAKE_BUILD_TYPE=Debug -DCTL_ENABLE_DEBUGGER=ON
@@ -63,10 +65,41 @@ done
 
 if [ -z "$CTLDAP" ]; then CTLDAP="${CTLDAP:-}"; fi   # honor env
 if [ -z "$CTLDAP" ]; then CTLDAP="$(command -v ctldap || true)"; fi
+# VS Code user settings (macOS) — the extension auto-saves
+# ctl.ctldapPath there on first use, so respect it as a fallback.
+if [ -z "$CTLDAP" ]; then
+    settings="$HOME/Library/Application Support/Code/User/settings.json"
+    if [ -f "$settings" ]; then
+        CTLDAP="$(python3 - "$settings" <<'PY' 2>/dev/null
+import json, re, sys
+try:
+    raw = open(sys.argv[1]).read()
+    raw = re.sub(r'//[^\n]*', '', raw)
+    raw = re.sub(r'/\*.*?\*/', '', raw, flags=re.S)
+    print(json.loads(raw).get("ctl.ctldapPath", "") or "")
+except Exception:
+    print("")
+PY
+        )"
+    fi
+fi
 if [ -z "$CTLDAP" ] && [ -n "$CTL_SRC" ]; then
     for sub in build-dbg-on/ctldap/ctldap build-dbg/ctldap/ctldap build/ctldap/ctldap; do
         candidate="$CTL_SRC/$sub"
         if [ -x "$candidate" ]; then CTLDAP="$candidate"; break; fi
+    done
+fi
+# Common dev-machine clone locations (so the script "just works"
+# without env vars when CTL is in an obvious place).
+if [ -z "$CTLDAP" ]; then
+    for root in \
+        "$HOME/Source/CTL" \
+        "$HOME/Source/CTL/.worktrees"/* \
+        "$HOME/CTL" \
+        "$HOME/src/CTL"; do
+        for sub in build-dbg-on/ctldap/ctldap build-dbg/ctldap/ctldap build/ctldap/ctldap; do
+            if [ -x "$root/$sub" ]; then CTLDAP="$root/$sub"; break 2; fi
+        done
     done
 fi
 
