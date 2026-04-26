@@ -1,7 +1,7 @@
 // Unit tests for colorSwatches helpers.  Run via `npm test`.
 
 const assert = require('node:assert/strict');
-const { parseColorValue, colorToCss } = require('../out/colorSwatches');
+const { parseColorValue, colorToCss } = require('../../out/colorSwatches');
 
 let pass = 0, fail = 0;
 function t(name, fn) {

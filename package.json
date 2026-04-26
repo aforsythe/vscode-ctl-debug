@@ -12,100 +12,140 @@
     "bugs": {
         "url": "https://github.com/aswf/vscode-ctl/issues"
     },
-    "engines": { "vscode": "^1.80.0" },
-    "categories": ["Debuggers", "Programming Languages"],
+    "engines": {
+        "vscode": "^1.80.0"
+    },
+    "categories": [
+        "Debuggers",
+        "Programming Languages"
+    ],
     "main": "./out/extension.js",
     "contributes": {
-        "grammars": [{
-            "language": "ctl",
-            "scopeName": "source.ctl",
-            "path": "./syntaxes/ctl.tmLanguage.json"
-        }],
-        "languages": [{
-            "id": "ctl",
-            "aliases": ["CTL", "Color Transform Language"],
-            "extensions": [".ctl"]
-        }],
-        "debuggers": [{
-            "type": "ctl",
-            "label": "CTL Single-Pixel Debugger",
-            "languages": ["ctl"],
-            "configurationAttributes": {
-                "launch": {
-                    "required": ["program"],
-                    "properties": {
-                        "program": {
-                            "type": "string",
-                            "description": "Path to the .ctl file to debug",
-                            "default": "${file}"
-                        },
-                        "programs": {
-                            "type": "array",
-                            "description": "Paths to .ctl files to chain (alternative to single `program`)",
-                            "items": { "type": "string" }
-                        },
-                        "function": {
-                            "type": "string",
-                            "description": "CTL function to invoke",
-                            "default": "main"
-                        },
-                        "functions": {
-                            "type": "array",
-                            "description": "Functions to invoke per stage (defaults to `main` for each)",
-                            "items": { "type": "string" }
-                        },
-                        "modulePaths": {
-                            "type": "array",
-                            "description": "Additional directories to search for `import` statements (combined with $CTL_MODULE_PATH and per-file parent directories)",
-                            "items": { "type": "string" }
-                        },
-                        "pixel": {
-                            "type": "array",
-                            "description": "Pixel value (3 or 4 floats).  If omitted, the live value from the status-bar pixel picker is used.  Specify here only if you want to LOCK this configuration to a specific pixel.",
-                            "items": { "type": "number" }
-                        },
-                        "params": {
-                            "type": "object",
-                            "description": "Uniform input bindings by name, e.g. {\"gain\": 1.5}",
-                            "additionalProperties": { "type": "number" }
-                        },
-                        "stopOnEntry": {
-                            "type": "boolean",
-                            "description": "Stop on the first executed instruction",
-                            "default": false
-                        },
-                        "pixelEvolution": {
-                            "type": "boolean",
-                            "description": "Emit a '→ paused name=[…]' Debug Console line at every pause summarising every color-shaped (float[3]/float[4]) local in scope.  Useful for watching the pipeline transform the pixel without scrolling the Variables panel.",
-                            "default": false
-                        },
-                        "ctldap": {
-                            "type": "string",
-                            "description": "Path to the ctldap binary (overrides the ctl.ctldapPath user setting for this configuration)"
+        "grammars": [
+            {
+                "language": "ctl",
+                "scopeName": "source.ctl",
+                "path": "./syntaxes/ctl.tmLanguage.json"
+            }
+        ],
+        "languages": [
+            {
+                "id": "ctl",
+                "aliases": [
+                    "CTL",
+                    "Color Transform Language"
+                ],
+                "extensions": [
+                    ".ctl"
+                ]
+            }
+        ],
+        "debuggers": [
+            {
+                "type": "ctl",
+                "label": "CTL Single-Pixel Debugger",
+                "languages": [
+                    "ctl"
+                ],
+                "configurationAttributes": {
+                    "launch": {
+                        "required": [
+                            "program"
+                        ],
+                        "properties": {
+                            "program": {
+                                "type": "string",
+                                "description": "Path to the .ctl file to debug",
+                                "default": "${file}"
+                            },
+                            "programs": {
+                                "type": "array",
+                                "description": "Paths to .ctl files to chain (alternative to single `program`)",
+                                "items": {
+                                    "type": "string"
+                                }
+                            },
+                            "function": {
+                                "type": "string",
+                                "description": "CTL function to invoke",
+                                "default": "main"
+                            },
+                            "functions": {
+                                "type": "array",
+                                "description": "Functions to invoke per stage (defaults to `main` for each)",
+                                "items": {
+                                    "type": "string"
+                                }
+                            },
+                            "modulePaths": {
+                                "type": "array",
+                                "description": "Additional directories to search for `import` statements (combined with $CTL_MODULE_PATH and per-file parent directories)",
+                                "items": {
+                                    "type": "string"
+                                }
+                            },
+                            "pixel": {
+                                "type": "array",
+                                "description": "Pixel value (3 or 4 floats).  If omitted, the live value from the status-bar pixel picker is used.  Specify here only if you want to LOCK this configuration to a specific pixel.",
+                                "items": {
+                                    "type": "number"
+                                }
+                            },
+                            "params": {
+                                "type": "object",
+                                "description": "Uniform input bindings by name, e.g. {\"gain\": 1.5}",
+                                "additionalProperties": {
+                                    "type": "number"
+                                }
+                            },
+                            "stopOnEntry": {
+                                "type": "boolean",
+                                "description": "Stop on the first executed instruction",
+                                "default": false
+                            },
+                            "pixelEvolution": {
+                                "type": "boolean",
+                                "description": "Emit a '→ paused name=[…]' Debug Console line at every pause summarising every color-shaped (float[3]/float[4]) local in scope.  Useful for watching the pipeline transform the pixel without scrolling the Variables panel.",
+                                "default": false
+                            },
+                            "ctldap": {
+                                "type": "string",
+                                "description": "Path to the ctldap binary (overrides the ctl.ctldapPath user setting for this configuration)"
+                            }
                         }
                     }
-                }
-            },
-            "initialConfigurations": [
-                {
-                    "type": "ctl",
-                    "request": "launch",
-                    "name": "Debug CTL (single file)",
-                    "program": "${file}",
-                    "function": "main",
-                    "stopOnEntry": false
                 },
-                {
-                    "type": "ctl",
-                    "request": "launch",
-                    "name": "Debug ACES chain (IDT → RRT → ODT)",
-                    "programs": ["${workspaceFolder}/IDT.ctl", "${workspaceFolder}/RRT.ctl", "${workspaceFolder}/ODT.ctl"],
-                    "functions": ["IDT::main", "RRT::main", "ODT::main"],
-                    "modulePaths": ["${workspaceFolder}/aces-dev/transforms/ctl/lib"],
-                    "stopOnEntry": false
-                }
-            ]
-        }],
+                "initialConfigurations": [
+                    {
+                        "type": "ctl",
+                        "request": "launch",
+                        "name": "Debug CTL (single file)",
+                        "program": "${file}",
+                        "function": "main",
+                        "stopOnEntry": false
+                    },
+                    {
+                        "type": "ctl",
+                        "request": "launch",
+                        "name": "Debug ACES chain (IDT → RRT → ODT)",
+                        "programs": [
+                            "${workspaceFolder}/IDT.ctl",
+                            "${workspaceFolder}/RRT.ctl",
+                            "${workspaceFolder}/ODT.ctl"
+                        ],
+                        "functions": [
+                            "IDT::main",
+                            "RRT::main",
+                            "ODT::main"
+                        ],
+                        "modulePaths": [
+                            "${workspaceFolder}/aces-dev/transforms/ctl/lib"
+                        ],
+                        "stopOnEntry": false
+                    }
+                ]
+            }
+        ],
         "configuration": {
             "title": "CTL Debug",
             "properties": {
@@ -164,12 +204,15 @@
     "scripts": {
         "vscode:prepublish": "npm run compile",
         "compile": "tsc -p ./",
-        "watch":   "tsc -watch -p ./",
-        "test":    "npm run compile && node test/inlineIdentifiers.test.js && node test/ctlRepoDetect.test.js && node test/colorSwatches.test.js"
+        "watch": "tsc -watch -p ./",
+        "test:unit": "node tests/unit/inlineIdentifiers.test.js && node tests/unit/ctlRepoDetect.test.js && node tests/unit/colorSwatches.test.js",
+        "test:grammar": "vscode-tmgrammar-snap -s source.ctl -g syntaxes/ctl.tmLanguage.json 'tests/grammar/fixtures/*.ctl'",
+        "test": "npm run compile && npm run test:unit && npm run test:grammar"
     },
     "devDependencies": {
-        "@types/node":    "^20.0.0",
-        "@types/vscode":  "^1.80.0",
-        "typescript":     "^5.0.0"
+        "@types/node": "^20.0.0",
+        "@types/vscode": "^1.80.0",
+        "typescript": "^5.0.0",
+        "vscode-tmgrammar-test": "^0.1.3"
     }
 }

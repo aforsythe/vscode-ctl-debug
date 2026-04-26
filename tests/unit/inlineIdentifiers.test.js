@@ -7,7 +7,7 @@
 // the TypeScript build is broken or out of date.
 
 const assert = require('node:assert/strict');
-const { findInlineIdentifiers } = require('../out/inlineIdentifiers');
+const { findInlineIdentifiers } = require('../../out/inlineIdentifiers');
 
 let pass = 0, fail = 0;
 function t(name, fn) {

@@ -43,13 +43,27 @@ That uses this extension's source via `code --extensionDevelopmentPath`.
 ## Running tests
 
 ```sh
-npm test
+npm test                  # unit + grammar snapshots
+npm run test:unit         # just the helper unit tests
+npm run test:grammar      # just the grammar snapshot tests
 ```
 
-Tests are pure-Node unit tests for the helpers (`src/inlineIdentifiers.ts`,
-`src/colorSwatches.ts`, `src/ctlRepoDetect.ts`).  No `vscode-test`
-runtime — that means CI is fast (no Electron download) and tests can
-run anywhere Node 20 does.
+Two test suites:
+
+- **Unit tests** (`tests/unit/`) — pure-Node assertions for the helpers
+  (`src/inlineIdentifiers.ts`, `src/colorSwatches.ts`,
+  `src/ctlRepoDetect.ts`).  No `vscode-test` / Electron — runs anywhere
+  Node 20+ does, fast in CI.
+- **Grammar snapshot tests** (`tests/grammar/`) — tokenizes a few real
+  ACES `.ctl` files through `syntaxes/ctl.tmLanguage.json` and compares
+  the output to a committed `.snap` file per fixture.  Catches
+  unintended changes when the grammar is edited.  After an
+  intentional grammar change:
+  ```sh
+  npm run test:grammar -- --updateSnapshot
+  ```
+  Review the diff before committing.  See
+  [`tests/grammar/README.md`](tests/grammar/README.md) for details.
 
 End-to-end behavior of the extension itself is exercised by
 [`docs/MANUAL_TESTING.md`](docs/MANUAL_TESTING.md) (manual) and indirectly by the headless

@@ -7,7 +7,7 @@ const assert = require('node:assert/strict');
 const fs     = require('node:fs');
 const os     = require('node:os');
 const path   = require('node:path');
-const { detectCtlRepo, isCtlSourceRoot } = require('../out/ctlRepoDetect');
+const { detectCtlRepo, isCtlSourceRoot } = require('../../out/ctlRepoDetect');
 
 let pass = 0, fail = 0;
 function t(name, fn) {

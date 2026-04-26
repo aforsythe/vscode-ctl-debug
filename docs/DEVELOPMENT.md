@@ -54,8 +54,9 @@ debugger logic itself lives in `ctldap` and the CTL libraries.
 - `src/ctlRepoDetect.ts` — heuristically detects whether a folder is
   a CTL source checkout and returns the suggested build directory.
 
-These are deliberately framework-free so the unit tests in `test/`
-can `require()` the compiled JS directly without an Electron runtime.
+These are deliberately framework-free so the unit tests in
+`tests/unit/` can `require()` the compiled JS directly without an
+Electron runtime.
 
 ## Build
 
@@ -79,14 +80,32 @@ npx --yes @vscode/vsce package --no-yarn
 ## Testing
 
 ```sh
-npm test
+npm test                  # runs everything below
+npm run test:unit         # helper unit tests (~ms)
+npm run test:grammar      # grammar snapshot tests (~s)
 ```
 
 What runs:
 - `npm run compile` first (so the `out/` JS is current).
-- Three Node test files that exercise the pure helpers via
-  `node:assert`.  No Electron, no `@vscode/test-electron` — keeps CI
-  fast and lets you run tests over SSH.
+- **Unit tests** — three Node test files in `tests/unit/` that
+  exercise the pure helpers via `node:assert`.  No Electron, no
+  `@vscode/test-electron` — keeps CI fast and lets you run tests
+  over SSH.
+- **Grammar snapshot tests** — `vscode-tmgrammar-snap` tokenises
+  every fixture in `tests/grammar/fixtures/` through the CTL
+  TextMate grammar and diffs the output against committed
+  `<fixture>.snap` files.  Catches unintended highlighting
+  regressions on real-world ACES code.
+
+After an intentional grammar change, refresh the snapshots:
+
+```sh
+npm run test:grammar -- --updateSnapshot
+```
+
+Review the diff before committing.  See
+[`tests/grammar/README.md`](../tests/grammar/README.md) for fixture
+provenance + how to add new ones.
 
 What's NOT covered by `npm test`:
 - The DAP wire protocol (covered by `ctldap/tests/run_demo_scenarios.py`
@@ -109,7 +128,10 @@ See the `## Releasing` section in `CONTRIBUTING.md`.
 - `src/inlineIdentifiers.ts` — pure helper.
 - `src/colorSwatches.ts` — pure helper.
 - `src/ctlRepoDetect.ts` — pure helper.
-- `test/` — Node-based unit tests for the pure helpers.
+- `tests/unit/`    — Node-based unit tests for the pure helpers.
+- `tests/grammar/` — `.ctl` fixtures + token-stream snapshots that
+                     guard the TextMate grammar against regressions
+                     (run by `vscode-tmgrammar-snap`).
 - `syntaxes/` — TextMate grammar for `.ctl` files.
 - `scripts/launch-demo.sh` — developer convenience: spawn an
   Extension Development Host against a temp workspace with sample

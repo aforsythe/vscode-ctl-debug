@@ -4,7 +4,7 @@
 .vscode-test/**
 .github/**
 src/**
-test/**
+tests/**
 docs/**
 .gitignore
 .eslintrc.js

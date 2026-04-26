@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+- **Grammar snapshot tests** (`tests/grammar/`) — three real ACES
+  library files (`Lib.Academy.Tonescale`, `Lib.Academy.ColorSpaces`,
+  `Lib.Academy.Utilities`) tokenised through the grammar and
+  snapshotted via `vscode-tmgrammar-snap`.  Run as part of
+  `npm test`; refresh with `--updateSnapshot` after intentional
+  grammar changes.  Catches unintended highlighting regressions
+  before they ship.
+- Tests reorganised: existing helper unit tests moved from `test/`
+  to `tests/unit/`; grammar tests live in `tests/grammar/`.
+  Single `tests/` tree replaces the prior `test/` + scattered
+  layout.
+
 - **Syntax highlighting reworked from the ground up** to match the
   CTL Manual §5.2 + §5.7 and the actual stdlib registration in
   `lib/IlmCtlSimd/CtlSimdStdLib*.cpp`.  New scopes:

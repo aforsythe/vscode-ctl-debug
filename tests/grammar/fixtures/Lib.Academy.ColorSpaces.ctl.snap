@@ -1,0 +1,1099 @@
+>// SPDX-License-Identifier: Apache-2.0
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.ctl comment.line.double-slash.ctl
+>// Copyright Contributors to the ACES Project.
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.ctl comment.line.double-slash.ctl
+>
+>// <ACEStransformID>urn:ampas:aces:transformId:v2.0:Lib.Academy.ColorSpaces.a2.v1</ACEStransformID>
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.ctl comment.line.double-slash.ctl
+>// <ACESuserName>Color Space Conversion</ACESuserName>
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.ctl comment.line.double-slash.ctl
+>
+>//
+#^^ source.ctl comment.line.double-slash.ctl
+>// Functions for assorted color space operations
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.ctl comment.line.double-slash.ctl
+>//
+#^^ source.ctl comment.line.double-slash.ctl
+>
+>
+>
+>/* ---- Conversion Functions ---- */
+#^^ source.ctl comment.block.ctl
+#  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.ctl comment.block.ctl
+#                                  ^^ source.ctl comment.block.ctl
+>// Various transformations between color encodings and data representations
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.ctl comment.line.double-slash.ctl
+>//
+#^^ source.ctl comment.line.double-slash.ctl
+>
+>// Transformations between CIE XYZ tristimulus values and CIE x,y 
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.ctl comment.line.double-slash.ctl
+>// chromaticity coordinates
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.ctl comment.line.double-slash.ctl
+>float[3] XYZ_2_xyY( float XYZ[3])
+#^^^^^ source.ctl support.type.primitive.ctl
+#     ^ source.ctl punctuation.section.brackets.ctl
+#      ^ source.ctl constant.numeric.integer.decimal.ctl
+#       ^ source.ctl punctuation.section.brackets.ctl
+#        ^ source.ctl
+#         ^^^^^^^^^ source.ctl entity.name.function.call.ctl
+#                  ^ source.ctl punctuation.section.parens.ctl
+#                   ^ source.ctl
+#                    ^^^^^ source.ctl support.type.primitive.ctl
+#                         ^^^^ source.ctl
+#                             ^ source.ctl punctuation.section.brackets.ctl
+#                              ^ source.ctl constant.numeric.integer.decimal.ctl
+#                               ^ source.ctl punctuation.section.brackets.ctl
+#                                ^ source.ctl punctuation.section.parens.ctl
+>{  
+#^ source.ctl punctuation.section.block.ctl
+# ^^^ source.ctl
+>  float xyY[3];
+#^^ source.ctl
+#  ^^^^^ source.ctl support.type.primitive.ctl
+#       ^^^^ source.ctl
+#           ^ source.ctl punctuation.section.brackets.ctl
+#            ^ source.ctl constant.numeric.integer.decimal.ctl
+#             ^ source.ctl punctuation.section.brackets.ctl
+#              ^ source.ctl punctuation.terminator.statement.ctl
+>  float divisor = (XYZ[0] + XYZ[1] + XYZ[2]);
+#^^ source.ctl
+#  ^^^^^ source.ctl support.type.primitive.ctl
+#       ^^^^^^^^^ source.ctl
+#                ^ source.ctl keyword.operator.assignment.ctl
+#                 ^ source.ctl
+#                  ^ source.ctl punctuation.section.parens.ctl
+#                   ^^^ source.ctl
+#                      ^ source.ctl punctuation.section.brackets.ctl
+#                       ^ source.ctl constant.numeric.integer.decimal.ctl
+#                        ^ source.ctl punctuation.section.brackets.ctl
+#                         ^ source.ctl
+#                          ^ source.ctl keyword.operator.arithmetic.ctl
+#                           ^^^^ source.ctl
+#                               ^ source.ctl punctuation.section.brackets.ctl
+#                                ^ source.ctl constant.numeric.integer.decimal.ctl
+#                                 ^ source.ctl punctuation.section.brackets.ctl
+#                                  ^ source.ctl
+#                                   ^ source.ctl keyword.operator.arithmetic.ctl
+#                                    ^^^^ source.ctl
+#                                        ^ source.ctl punctuation.section.brackets.ctl
+#                                         ^ source.ctl constant.numeric.integer.decimal.ctl
+#                                          ^ source.ctl punctuation.section.brackets.ctl
+#                                           ^ source.ctl punctuation.section.parens.ctl
+#                                            ^ source.ctl punctuation.terminator.statement.ctl
+>  if (divisor == 0.) divisor = 1e-10;
+#^^ source.ctl
+#  ^^ source.ctl keyword.control.ctl
+#    ^ source.ctl
+#     ^ source.ctl punctuation.section.parens.ctl
+#      ^^^^^^^^ source.ctl
+#              ^^ source.ctl keyword.operator.comparison.ctl
+#                ^ source.ctl
+#                 ^ source.ctl constant.numeric.integer.decimal.ctl
+#                  ^ source.ctl punctuation.accessor.member.ctl
+#                   ^ source.ctl punctuation.section.parens.ctl
+#                    ^^^^^^^^^ source.ctl
+#                             ^ source.ctl keyword.operator.assignment.ctl
+#                              ^ source.ctl
+#                               ^^^^^ source.ctl constant.numeric.float.ctl
+#                                    ^ source.ctl punctuation.terminator.statement.ctl
+>  xyY[0] = XYZ[0] / divisor;
+#^^^^^ source.ctl
+#     ^ source.ctl punctuation.section.brackets.ctl
+#      ^ source.ctl constant.numeric.integer.decimal.ctl
+#       ^ source.ctl punctuation.section.brackets.ctl
+#        ^ source.ctl
+#         ^ source.ctl keyword.operator.assignment.ctl
+#          ^^^^ source.ctl
+#              ^ source.ctl punctuation.section.brackets.ctl
+#               ^ source.ctl constant.numeric.integer.decimal.ctl
+#                ^ source.ctl punctuation.section.brackets.ctl
+#                 ^ source.ctl
+#                  ^ source.ctl keyword.operator.arithmetic.ctl
+#                   ^^^^^^^^ source.ctl
+#                           ^ source.ctl punctuation.terminator.statement.ctl
+>  xyY[1] = XYZ[1] / divisor;  
+#^^^^^ source.ctl
+#     ^ source.ctl punctuation.section.brackets.ctl
+#      ^ source.ctl constant.numeric.integer.decimal.ctl
+#       ^ source.ctl punctuation.section.brackets.ctl
+#        ^ source.ctl
+#         ^ source.ctl keyword.operator.assignment.ctl
+#          ^^^^ source.ctl
+#              ^ source.ctl punctuation.section.brackets.ctl
+#               ^ source.ctl constant.numeric.integer.decimal.ctl
+#                ^ source.ctl punctuation.section.brackets.ctl
+#                 ^ source.ctl
+#                  ^ source.ctl keyword.operator.arithmetic.ctl
+#                   ^^^^^^^^ source.ctl
+#                           ^ source.ctl punctuation.terminator.statement.ctl
+#                            ^^^ source.ctl
+>  xyY[2] = XYZ[1];
+#^^^^^ source.ctl
+#     ^ source.ctl punctuation.section.brackets.ctl
+#      ^ source.ctl constant.numeric.integer.decimal.ctl
+#       ^ source.ctl punctuation.section.brackets.ctl
+#        ^ source.ctl
+#         ^ source.ctl keyword.operator.assignment.ctl
+#          ^^^^ source.ctl
+#              ^ source.ctl punctuation.section.brackets.ctl
+#               ^ source.ctl constant.numeric.integer.decimal.ctl
+#                ^ source.ctl punctuation.section.brackets.ctl
+#                 ^ source.ctl punctuation.terminator.statement.ctl
+>  
+>  return xyY;
+#^^ source.ctl
+#  ^^^^^^ source.ctl keyword.control.ctl
+#        ^^^^ source.ctl
+#            ^ source.ctl punctuation.terminator.statement.ctl
+>}
+#^ source.ctl punctuation.section.block.ctl
+>
+>float[3] xyY_2_XYZ( input varying float xyY[3])
+#^^^^^ source.ctl support.type.primitive.ctl
+#     ^ source.ctl punctuation.section.brackets.ctl
+#      ^ source.ctl constant.numeric.integer.decimal.ctl
+#       ^ source.ctl punctuation.section.brackets.ctl
+#        ^ source.ctl
+#         ^^^^^^^^^ source.ctl entity.name.function.call.ctl
+#                  ^ source.ctl punctuation.section.parens.ctl
+#                   ^ source.ctl
+#                    ^^^^^ source.ctl storage.modifier.ctl
+#                         ^ source.ctl
+#                          ^^^^^^^ source.ctl storage.modifier.ctl
+#                                 ^ source.ctl
+#                                  ^^^^^ source.ctl support.type.primitive.ctl
+#                                       ^^^^ source.ctl
+#                                           ^ source.ctl punctuation.section.brackets.ctl
+#                                            ^ source.ctl constant.numeric.integer.decimal.ctl
+#                                             ^ source.ctl punctuation.section.brackets.ctl
+#                                              ^ source.ctl punctuation.section.parens.ctl
+>{
+#^ source.ctl punctuation.section.block.ctl
+>  float XYZ[3];
+#^^ source.ctl
+#  ^^^^^ source.ctl support.type.primitive.ctl
+#       ^^^^ source.ctl
+#           ^ source.ctl punctuation.section.brackets.ctl
+#            ^ source.ctl constant.numeric.integer.decimal.ctl
+#             ^ source.ctl punctuation.section.brackets.ctl
+#              ^ source.ctl punctuation.terminator.statement.ctl
+>  XYZ[0] = xyY[0] * xyY[2] / max( xyY[1], 1e-10);
+#^^^^^ source.ctl
+#     ^ source.ctl punctuation.section.brackets.ctl
+#      ^ source.ctl constant.numeric.integer.decimal.ctl
+#       ^ source.ctl punctuation.section.brackets.ctl
+#        ^ source.ctl
+#         ^ source.ctl keyword.operator.assignment.ctl
+#          ^^^^ source.ctl
+#              ^ source.ctl punctuation.section.brackets.ctl
+#               ^ source.ctl constant.numeric.integer.decimal.ctl
+#                ^ source.ctl punctuation.section.brackets.ctl
+#                 ^ source.ctl
+#                  ^ source.ctl keyword.operator.arithmetic.ctl
+#                   ^^^^ source.ctl
+#                       ^ source.ctl punctuation.section.brackets.ctl
+#                        ^ source.ctl constant.numeric.integer.decimal.ctl
+#                         ^ source.ctl punctuation.section.brackets.ctl
+#                          ^ source.ctl
+#                           ^ source.ctl keyword.operator.arithmetic.ctl
+#                            ^ source.ctl
+#                             ^^^ source.ctl entity.name.function.call.ctl
+#                                ^ source.ctl punctuation.section.parens.ctl
+#                                 ^^^^ source.ctl
+#                                     ^ source.ctl punctuation.section.brackets.ctl
+#                                      ^ source.ctl constant.numeric.integer.decimal.ctl
+#                                       ^ source.ctl punctuation.section.brackets.ctl
+#                                        ^ source.ctl punctuation.separator.comma.ctl
+#                                         ^ source.ctl
+#                                          ^^^^^ source.ctl constant.numeric.float.ctl
+#                                               ^ source.ctl punctuation.section.parens.ctl
+#                                                ^ source.ctl punctuation.terminator.statement.ctl
+>  XYZ[1] = xyY[2];  
+#^^^^^ source.ctl
+#     ^ source.ctl punctuation.section.brackets.ctl
+#      ^ source.ctl constant.numeric.integer.decimal.ctl
+#       ^ source.ctl punctuation.section.brackets.ctl
+#        ^ source.ctl
+#         ^ source.ctl keyword.operator.assignment.ctl
+#          ^^^^ source.ctl
+#              ^ source.ctl punctuation.section.brackets.ctl
+#               ^ source.ctl constant.numeric.integer.decimal.ctl
+#                ^ source.ctl punctuation.section.brackets.ctl
+#                 ^ source.ctl punctuation.terminator.statement.ctl
+#                  ^^^ source.ctl
+>  XYZ[2] = (1.0 - xyY[0] - xyY[1]) * xyY[2] / max( xyY[1], 1e-10);
+#^^^^^ source.ctl
+#     ^ source.ctl punctuation.section.brackets.ctl
+#      ^ source.ctl constant.numeric.integer.decimal.ctl
+#       ^ source.ctl punctuation.section.brackets.ctl
+#        ^ source.ctl
+#         ^ source.ctl keyword.operator.assignment.ctl
+#          ^ source.ctl
+#           ^ source.ctl punctuation.section.parens.ctl
+#            ^^^ source.ctl constant.numeric.float.ctl
+#               ^ source.ctl
+#                ^ source.ctl keyword.operator.arithmetic.ctl
+#                 ^^^^ source.ctl
+#                     ^ source.ctl punctuation.section.brackets.ctl
+#                      ^ source.ctl constant.numeric.integer.decimal.ctl
+#                       ^ source.ctl punctuation.section.brackets.ctl
+#                        ^ source.ctl
+#                         ^ source.ctl keyword.operator.arithmetic.ctl
+#                          ^^^^ source.ctl
+#                              ^ source.ctl punctuation.section.brackets.ctl
+#                               ^ source.ctl constant.numeric.integer.decimal.ctl
+#                                ^ source.ctl punctuation.section.brackets.ctl
+#                                 ^ source.ctl punctuation.section.parens.ctl
+#                                  ^ source.ctl
+#                                   ^ source.ctl keyword.operator.arithmetic.ctl
+#                                    ^^^^ source.ctl
+#                                        ^ source.ctl punctuation.section.brackets.ctl
+#                                         ^ source.ctl constant.numeric.integer.decimal.ctl
+#                                          ^ source.ctl punctuation.section.brackets.ctl
+#                                           ^ source.ctl
+#                                            ^ source.ctl keyword.operator.arithmetic.ctl
+#                                             ^ source.ctl
+#                                              ^^^ source.ctl entity.name.function.call.ctl
+#                                                 ^ source.ctl punctuation.section.parens.ctl
+#                                                  ^^^^ source.ctl
+#                                                      ^ source.ctl punctuation.section.brackets.ctl
+#                                                       ^ source.ctl constant.numeric.integer.decimal.ctl
+#                                                        ^ source.ctl punctuation.section.brackets.ctl
+#                                                         ^ source.ctl punctuation.separator.comma.ctl
+#                                                          ^ source.ctl
+#                                                           ^^^^^ source.ctl constant.numeric.float.ctl
+#                                                                ^ source.ctl punctuation.section.parens.ctl
+#                                                                 ^ source.ctl punctuation.terminator.statement.ctl
+>
+>  return XYZ;
+#^^ source.ctl
+#  ^^^^^^ source.ctl keyword.control.ctl
+#        ^^^^ source.ctl
+#            ^ source.ctl punctuation.terminator.statement.ctl
+>}
+#^ source.ctl punctuation.section.block.ctl
+>
+>/* ---- Chromatic Adaptation ---- */
+#^^ source.ctl comment.block.ctl
+#  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.ctl comment.block.ctl
+#                                  ^^ source.ctl comment.block.ctl
+>
+>const float CONE_RESP_MAT_BRADFORD[3][3] = {
+#^^^^^ source.ctl storage.modifier.ctl
+#     ^ source.ctl
+#      ^^^^^ source.ctl support.type.primitive.ctl
+#           ^^^^^^^^^^^^^^^^^^^^^^^ source.ctl
+#                                  ^ source.ctl punctuation.section.brackets.ctl
+#                                   ^ source.ctl constant.numeric.integer.decimal.ctl
+#                                    ^ source.ctl punctuation.section.brackets.ctl
+#                                     ^ source.ctl punctuation.section.brackets.ctl
+#                                      ^ source.ctl constant.numeric.integer.decimal.ctl
+#                                       ^ source.ctl punctuation.section.brackets.ctl
+#                                        ^ source.ctl
+#                                         ^ source.ctl keyword.operator.assignment.ctl
+#                                          ^ source.ctl
+#                                           ^ source.ctl punctuation.section.block.ctl
+>  { 0.89510, -0.75020,  0.03890},
+#^^ source.ctl
+#  ^ source.ctl punctuation.section.block.ctl
+#   ^ source.ctl
+#    ^^^^^^^ source.ctl constant.numeric.float.ctl
+#           ^ source.ctl punctuation.separator.comma.ctl
+#            ^ source.ctl
+#             ^ source.ctl keyword.operator.arithmetic.ctl
+#              ^^^^^^^ source.ctl constant.numeric.float.ctl
+#                     ^ source.ctl punctuation.separator.comma.ctl
+#                      ^^ source.ctl
+#                        ^^^^^^^ source.ctl constant.numeric.float.ctl
+#                               ^ source.ctl punctuation.section.block.ctl
+#                                ^ source.ctl punctuation.separator.comma.ctl
+>  { 0.26640,  1.71350, -0.06850},
+#^^ source.ctl
+#  ^ source.ctl punctuation.section.block.ctl
+#   ^ source.ctl
+#    ^^^^^^^ source.ctl constant.numeric.float.ctl
+#           ^ source.ctl punctuation.separator.comma.ctl
+#            ^^ source.ctl
+#              ^^^^^^^ source.ctl constant.numeric.float.ctl
+#                     ^ source.ctl punctuation.separator.comma.ctl
+#                      ^ source.ctl
+#                       ^ source.ctl keyword.operator.arithmetic.ctl
+#                        ^^^^^^^ source.ctl constant.numeric.float.ctl
+#                               ^ source.ctl punctuation.section.block.ctl
+#                                ^ source.ctl punctuation.separator.comma.ctl
+>  {-0.16140,  0.03670,  1.02960}
+#^^ source.ctl
+#  ^ source.ctl punctuation.section.block.ctl
+#   ^ source.ctl keyword.operator.arithmetic.ctl
+#    ^^^^^^^ source.ctl constant.numeric.float.ctl
+#           ^ source.ctl punctuation.separator.comma.ctl
+#            ^^ source.ctl
+#              ^^^^^^^ source.ctl constant.numeric.float.ctl
+#                     ^ source.ctl punctuation.separator.comma.ctl
+#                      ^^ source.ctl
+#                        ^^^^^^^ source.ctl constant.numeric.float.ctl
+#                               ^ source.ctl punctuation.section.block.ctl
+>};
+#^ source.ctl punctuation.section.block.ctl
+# ^ source.ctl punctuation.terminator.statement.ctl
+>
+>const float CONE_RESP_MAT_CAT02[3][3] = {
+#^^^^^ source.ctl storage.modifier.ctl
+#     ^ source.ctl
+#      ^^^^^ source.ctl support.type.primitive.ctl
+#           ^^^^^^^^^^^^^^^^^^^^ source.ctl
+#                               ^ source.ctl punctuation.section.brackets.ctl
+#                                ^ source.ctl constant.numeric.integer.decimal.ctl
+#                                 ^ source.ctl punctuation.section.brackets.ctl
+#                                  ^ source.ctl punctuation.section.brackets.ctl
+#                                   ^ source.ctl constant.numeric.integer.decimal.ctl
+#                                    ^ source.ctl punctuation.section.brackets.ctl
+#                                     ^ source.ctl
+#                                      ^ source.ctl keyword.operator.assignment.ctl
+#                                       ^ source.ctl
+#                                        ^ source.ctl punctuation.section.block.ctl
+>  { 0.73280, -0.70360,  0.00300},
+#^^ source.ctl
+#  ^ source.ctl punctuation.section.block.ctl
+#   ^ source.ctl
+#    ^^^^^^^ source.ctl constant.numeric.float.ctl
+#           ^ source.ctl punctuation.separator.comma.ctl
+#            ^ source.ctl
+#             ^ source.ctl keyword.operator.arithmetic.ctl
+#              ^^^^^^^ source.ctl constant.numeric.float.ctl
+#                     ^ source.ctl punctuation.separator.comma.ctl
+#                      ^^ source.ctl
+#                        ^^^^^^^ source.ctl constant.numeric.float.ctl
+#                               ^ source.ctl punctuation.section.block.ctl
+#                                ^ source.ctl punctuation.separator.comma.ctl
+>  { 0.42960,  1.69750,  0.01360},
+#^^ source.ctl
+#  ^ source.ctl punctuation.section.block.ctl
+#   ^ source.ctl
+#    ^^^^^^^ source.ctl constant.numeric.float.ctl
+#           ^ source.ctl punctuation.separator.comma.ctl
+#            ^^ source.ctl
+#              ^^^^^^^ source.ctl constant.numeric.float.ctl
+#                     ^ source.ctl punctuation.separator.comma.ctl
+#                      ^^ source.ctl
+#                        ^^^^^^^ source.ctl constant.numeric.float.ctl
+#                               ^ source.ctl punctuation.section.block.ctl
+#                                ^ source.ctl punctuation.separator.comma.ctl
+>  {-0.16240,  0.00610,  0.98340}
+#^^ source.ctl
+#  ^ source.ctl punctuation.section.block.ctl
+#   ^ source.ctl keyword.operator.arithmetic.ctl
+#    ^^^^^^^ source.ctl constant.numeric.float.ctl
+#           ^ source.ctl punctuation.separator.comma.ctl
+#            ^^ source.ctl
+#              ^^^^^^^ source.ctl constant.numeric.float.ctl
+#                     ^ source.ctl punctuation.separator.comma.ctl
+#                      ^^ source.ctl
+#                        ^^^^^^^ source.ctl constant.numeric.float.ctl
+#                               ^ source.ctl punctuation.section.block.ctl
+>};
+#^ source.ctl punctuation.section.block.ctl
+# ^ source.ctl punctuation.terminator.statement.ctl
+>
+>float[3][3] calculate_cat_matrix
+#^^^^^ source.ctl support.type.primitive.ctl
+#     ^ source.ctl punctuation.section.brackets.ctl
+#      ^ source.ctl constant.numeric.integer.decimal.ctl
+#       ^ source.ctl punctuation.section.brackets.ctl
+#        ^ source.ctl punctuation.section.brackets.ctl
+#         ^ source.ctl constant.numeric.integer.decimal.ctl
+#          ^ source.ctl punctuation.section.brackets.ctl
+#           ^^^^^^^^^^^^^^^^^^^^^^ source.ctl
+>  ( float src_xy[2],         // x,y chromaticity of source white
+#^^ source.ctl
+#  ^ source.ctl punctuation.section.parens.ctl
+#   ^ source.ctl
+#    ^^^^^ source.ctl support.type.primitive.ctl
+#         ^^^^^^^ source.ctl
+#                ^ source.ctl punctuation.section.brackets.ctl
+#                 ^ source.ctl constant.numeric.integer.decimal.ctl
+#                  ^ source.ctl punctuation.section.brackets.ctl
+#                   ^ source.ctl punctuation.separator.comma.ctl
+#                    ^^^^^^^^^ source.ctl
+#                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.ctl comment.line.double-slash.ctl
+>    float des_xy[2],         // x,y chromaticity of destination white
+#^^^^ source.ctl
+#    ^^^^^ source.ctl support.type.primitive.ctl
+#         ^^^^^^^ source.ctl
+#                ^ source.ctl punctuation.section.brackets.ctl
+#                 ^ source.ctl constant.numeric.integer.decimal.ctl
+#                  ^ source.ctl punctuation.section.brackets.ctl
+#                   ^ source.ctl punctuation.separator.comma.ctl
+#                    ^^^^^^^^^ source.ctl
+#                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.ctl comment.line.double-slash.ctl
+>    float coneRespMat[3][3] = CONE_RESP_MAT_BRADFORD
+#^^^^ source.ctl
+#    ^^^^^ source.ctl support.type.primitive.ctl
+#         ^^^^^^^^^^^^ source.ctl
+#                     ^ source.ctl punctuation.section.brackets.ctl
+#                      ^ source.ctl constant.numeric.integer.decimal.ctl
+#                       ^ source.ctl punctuation.section.brackets.ctl
+#                        ^ source.ctl punctuation.section.brackets.ctl
+#                         ^ source.ctl constant.numeric.integer.decimal.ctl
+#                          ^ source.ctl punctuation.section.brackets.ctl
+#                           ^ source.ctl
+#                            ^ source.ctl keyword.operator.assignment.ctl
+#                             ^^^^^^^^^^^^^^^^^^^^^^^^ source.ctl
+>  )
+#^^ source.ctl
+#  ^ source.ctl punctuation.section.parens.ctl
+>{
+#^ source.ctl punctuation.section.block.ctl
+>  //
+#^^ source.ctl
+#  ^^ source.ctl comment.line.double-slash.ctl
+>  // Calculates and returns a 3x3 Von Kries chromatic adaptation transform 
+#^^ source.ctl
+#  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.ctl comment.line.double-slash.ctl
+>  // from src_xy to des_xy using the cone response primaries defined 
+#^^ source.ctl
+#  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.ctl comment.line.double-slash.ctl
+>  // by coneRespMat. By default, coneRespMat is set to CONE_RESP_MAT_BRADFORD. 
+#^^ source.ctl
+#  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.ctl comment.line.double-slash.ctl
+>  // The default coneRespMat can be overridden at runtime. 
+#^^ source.ctl
+#  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.ctl comment.line.double-slash.ctl
+>  //
+#^^ source.ctl
+#  ^^ source.ctl comment.line.double-slash.ctl
+>
+>  const float src_xyY[3] = { src_xy[0], src_xy[1], 1. };
+#^^ source.ctl
+#  ^^^^^ source.ctl storage.modifier.ctl
+#       ^ source.ctl
+#        ^^^^^ source.ctl support.type.primitive.ctl
+#             ^^^^^^^^ source.ctl
+#                     ^ source.ctl punctuation.section.brackets.ctl
+#                      ^ source.ctl constant.numeric.integer.decimal.ctl
+#                       ^ source.ctl punctuation.section.brackets.ctl
+#                        ^ source.ctl
+#                         ^ source.ctl keyword.operator.assignment.ctl
+#                          ^ source.ctl
+#                           ^ source.ctl punctuation.section.block.ctl
+#                            ^^^^^^^ source.ctl
+#                                   ^ source.ctl punctuation.section.brackets.ctl
+#                                    ^ source.ctl constant.numeric.integer.decimal.ctl
+#                                     ^ source.ctl punctuation.section.brackets.ctl
+#                                      ^ source.ctl punctuation.separator.comma.ctl
+#                                       ^^^^^^^ source.ctl
+#                                              ^ source.ctl punctuation.section.brackets.ctl
+#                                               ^ source.ctl constant.numeric.integer.decimal.ctl
+#                                                ^ source.ctl punctuation.section.brackets.ctl
+#                                                 ^ source.ctl punctuation.separator.comma.ctl
+#                                                  ^ source.ctl
+#                                                   ^ source.ctl constant.numeric.integer.decimal.ctl
+#                                                    ^ source.ctl punctuation.accessor.member.ctl
+#                                                     ^ source.ctl
+#                                                      ^ source.ctl punctuation.section.block.ctl
+#                                                       ^ source.ctl punctuation.terminator.statement.ctl
+>  const float des_xyY[3] = { des_xy[0], des_xy[1], 1. };
+#^^ source.ctl
+#  ^^^^^ source.ctl storage.modifier.ctl
+#       ^ source.ctl
+#        ^^^^^ source.ctl support.type.primitive.ctl
+#             ^^^^^^^^ source.ctl
+#                     ^ source.ctl punctuation.section.brackets.ctl
+#                      ^ source.ctl constant.numeric.integer.decimal.ctl
+#                       ^ source.ctl punctuation.section.brackets.ctl
+#                        ^ source.ctl
+#                         ^ source.ctl keyword.operator.assignment.ctl
+#                          ^ source.ctl
+#                           ^ source.ctl punctuation.section.block.ctl
+#                            ^^^^^^^ source.ctl
+#                                   ^ source.ctl punctuation.section.brackets.ctl
+#                                    ^ source.ctl constant.numeric.integer.decimal.ctl
+#                                     ^ source.ctl punctuation.section.brackets.ctl
+#                                      ^ source.ctl punctuation.separator.comma.ctl
+#                                       ^^^^^^^ source.ctl
+#                                              ^ source.ctl punctuation.section.brackets.ctl
+#                                               ^ source.ctl constant.numeric.integer.decimal.ctl
+#                                                ^ source.ctl punctuation.section.brackets.ctl
+#                                                 ^ source.ctl punctuation.separator.comma.ctl
+#                                                  ^ source.ctl
+#                                                   ^ source.ctl constant.numeric.integer.decimal.ctl
+#                                                    ^ source.ctl punctuation.accessor.member.ctl
+#                                                     ^ source.ctl
+#                                                      ^ source.ctl punctuation.section.block.ctl
+#                                                       ^ source.ctl punctuation.terminator.statement.ctl
+>
+>  float src_XYZ[3] = xyY_2_XYZ( src_xyY );
+#^^ source.ctl
+#  ^^^^^ source.ctl support.type.primitive.ctl
+#       ^^^^^^^^ source.ctl
+#               ^ source.ctl punctuation.section.brackets.ctl
+#                ^ source.ctl constant.numeric.integer.decimal.ctl
+#                 ^ source.ctl punctuation.section.brackets.ctl
+#                  ^ source.ctl
+#                   ^ source.ctl keyword.operator.assignment.ctl
+#                    ^ source.ctl
+#                     ^^^^^^^^^ source.ctl entity.name.function.call.ctl
+#                              ^ source.ctl punctuation.section.parens.ctl
+#                               ^^^^^^^^^ source.ctl
+#                                        ^ source.ctl punctuation.section.parens.ctl
+#                                         ^ source.ctl punctuation.terminator.statement.ctl
+>  float des_XYZ[3] = xyY_2_XYZ( des_xyY );
+#^^ source.ctl
+#  ^^^^^ source.ctl support.type.primitive.ctl
+#       ^^^^^^^^ source.ctl
+#               ^ source.ctl punctuation.section.brackets.ctl
+#                ^ source.ctl constant.numeric.integer.decimal.ctl
+#                 ^ source.ctl punctuation.section.brackets.ctl
+#                  ^ source.ctl
+#                   ^ source.ctl keyword.operator.assignment.ctl
+#                    ^ source.ctl
+#                     ^^^^^^^^^ source.ctl entity.name.function.call.ctl
+#                              ^ source.ctl punctuation.section.parens.ctl
+#                               ^^^^^^^^^ source.ctl
+#                                        ^ source.ctl punctuation.section.parens.ctl
+#                                         ^ source.ctl punctuation.terminator.statement.ctl
+>
+>  float src_coneResp[3] = mult_f3_f33( src_XYZ, coneRespMat);
+#^^ source.ctl
+#  ^^^^^ source.ctl support.type.primitive.ctl
+#       ^^^^^^^^^^^^^ source.ctl
+#                    ^ source.ctl punctuation.section.brackets.ctl
+#                     ^ source.ctl constant.numeric.integer.decimal.ctl
+#                      ^ source.ctl punctuation.section.brackets.ctl
+#                       ^ source.ctl
+#                        ^ source.ctl keyword.operator.assignment.ctl
+#                         ^ source.ctl
+#                          ^^^^^^^^^^^ source.ctl support.function.builtin.ctl
+#                                     ^ source.ctl punctuation.section.parens.ctl
+#                                      ^^^^^^^^ source.ctl
+#                                              ^ source.ctl punctuation.separator.comma.ctl
+#                                               ^^^^^^^^^^^^ source.ctl
+#                                                           ^ source.ctl punctuation.section.parens.ctl
+#                                                            ^ source.ctl punctuation.terminator.statement.ctl
+>  float des_coneResp[3] = mult_f3_f33( des_XYZ, coneRespMat);
+#^^ source.ctl
+#  ^^^^^ source.ctl support.type.primitive.ctl
+#       ^^^^^^^^^^^^^ source.ctl
+#                    ^ source.ctl punctuation.section.brackets.ctl
+#                     ^ source.ctl constant.numeric.integer.decimal.ctl
+#                      ^ source.ctl punctuation.section.brackets.ctl
+#                       ^ source.ctl
+#                        ^ source.ctl keyword.operator.assignment.ctl
+#                         ^ source.ctl
+#                          ^^^^^^^^^^^ source.ctl support.function.builtin.ctl
+#                                     ^ source.ctl punctuation.section.parens.ctl
+#                                      ^^^^^^^^ source.ctl
+#                                              ^ source.ctl punctuation.separator.comma.ctl
+#                                               ^^^^^^^^^^^^ source.ctl
+#                                                           ^ source.ctl punctuation.section.parens.ctl
+#                                                            ^ source.ctl punctuation.terminator.statement.ctl
+>
+>  float vkMat[3][3] = {
+#^^ source.ctl
+#  ^^^^^ source.ctl support.type.primitive.ctl
+#       ^^^^^^ source.ctl
+#             ^ source.ctl punctuation.section.brackets.ctl
+#              ^ source.ctl constant.numeric.integer.decimal.ctl
+#               ^ source.ctl punctuation.section.brackets.ctl
+#                ^ source.ctl punctuation.section.brackets.ctl
+#                 ^ source.ctl constant.numeric.integer.decimal.ctl
+#                  ^ source.ctl punctuation.section.brackets.ctl
+#                   ^ source.ctl
+#                    ^ source.ctl keyword.operator.assignment.ctl
+#                     ^ source.ctl
+#                      ^ source.ctl punctuation.section.block.ctl
+>      { des_coneResp[0] / src_coneResp[0], 0.0, 0.0 },
+#^^^^^^ source.ctl
+#      ^ source.ctl punctuation.section.block.ctl
+#       ^^^^^^^^^^^^^ source.ctl
+#                    ^ source.ctl punctuation.section.brackets.ctl
+#                     ^ source.ctl constant.numeric.integer.decimal.ctl
+#                      ^ source.ctl punctuation.section.brackets.ctl
+#                       ^ source.ctl
+#                        ^ source.ctl keyword.operator.arithmetic.ctl
+#                         ^^^^^^^^^^^^^ source.ctl
+#                                      ^ source.ctl punctuation.section.brackets.ctl
+#                                       ^ source.ctl constant.numeric.integer.decimal.ctl
+#                                        ^ source.ctl punctuation.section.brackets.ctl
+#                                         ^ source.ctl punctuation.separator.comma.ctl
+#                                          ^ source.ctl
+#                                           ^^^ source.ctl constant.numeric.float.ctl
+#                                              ^ source.ctl punctuation.separator.comma.ctl
+#                                               ^ source.ctl
+#                                                ^^^ source.ctl constant.numeric.float.ctl
+#                                                   ^ source.ctl
+#                                                    ^ source.ctl punctuation.section.block.ctl
+#                                                     ^ source.ctl punctuation.separator.comma.ctl
+>      { 0.0, des_coneResp[1] / src_coneResp[1], 0.0 },
+#^^^^^^ source.ctl
+#      ^ source.ctl punctuation.section.block.ctl
+#       ^ source.ctl
+#        ^^^ source.ctl constant.numeric.float.ctl
+#           ^ source.ctl punctuation.separator.comma.ctl
+#            ^^^^^^^^^^^^^ source.ctl
+#                         ^ source.ctl punctuation.section.brackets.ctl
+#                          ^ source.ctl constant.numeric.integer.decimal.ctl
+#                           ^ source.ctl punctuation.section.brackets.ctl
+#                            ^ source.ctl
+#                             ^ source.ctl keyword.operator.arithmetic.ctl
+#                              ^^^^^^^^^^^^^ source.ctl
+#                                           ^ source.ctl punctuation.section.brackets.ctl
+#                                            ^ source.ctl constant.numeric.integer.decimal.ctl
+#                                             ^ source.ctl punctuation.section.brackets.ctl
+#                                              ^ source.ctl punctuation.separator.comma.ctl
+#                                               ^ source.ctl
+#                                                ^^^ source.ctl constant.numeric.float.ctl
+#                                                   ^ source.ctl
+#                                                    ^ source.ctl punctuation.section.block.ctl
+#                                                     ^ source.ctl punctuation.separator.comma.ctl
+>      { 0.0, 0.0, des_coneResp[2] / src_coneResp[2] }
+#^^^^^^ source.ctl
+#      ^ source.ctl punctuation.section.block.ctl
+#       ^ source.ctl
+#        ^^^ source.ctl constant.numeric.float.ctl
+#           ^ source.ctl punctuation.separator.comma.ctl
+#            ^ source.ctl
+#             ^^^ source.ctl constant.numeric.float.ctl
+#                ^ source.ctl punctuation.separator.comma.ctl
+#                 ^^^^^^^^^^^^^ source.ctl
+#                              ^ source.ctl punctuation.section.brackets.ctl
+#                               ^ source.ctl constant.numeric.integer.decimal.ctl
+#                                ^ source.ctl punctuation.section.brackets.ctl
+#                                 ^ source.ctl
+#                                  ^ source.ctl keyword.operator.arithmetic.ctl
+#                                   ^^^^^^^^^^^^^ source.ctl
+#                                                ^ source.ctl punctuation.section.brackets.ctl
+#                                                 ^ source.ctl constant.numeric.integer.decimal.ctl
+#                                                  ^ source.ctl punctuation.section.brackets.ctl
+#                                                   ^ source.ctl
+#                                                    ^ source.ctl punctuation.section.block.ctl
+>  };
+#^^ source.ctl
+#  ^ source.ctl punctuation.section.block.ctl
+#   ^ source.ctl punctuation.terminator.statement.ctl
+>
+>  float cat_matrix[3][3] = mult_f33_f33( coneRespMat, mult_f33_f33( vkMat, invert_f33( coneRespMat ) ) );
+#^^ source.ctl
+#  ^^^^^ source.ctl support.type.primitive.ctl
+#       ^^^^^^^^^^^ source.ctl
+#                  ^ source.ctl punctuation.section.brackets.ctl
+#                   ^ source.ctl constant.numeric.integer.decimal.ctl
+#                    ^ source.ctl punctuation.section.brackets.ctl
+#                     ^ source.ctl punctuation.section.brackets.ctl
+#                      ^ source.ctl constant.numeric.integer.decimal.ctl
+#                       ^ source.ctl punctuation.section.brackets.ctl
+#                        ^ source.ctl
+#                         ^ source.ctl keyword.operator.assignment.ctl
+#                          ^ source.ctl
+#                           ^^^^^^^^^^^^ source.ctl support.function.builtin.ctl
+#                                       ^ source.ctl punctuation.section.parens.ctl
+#                                        ^^^^^^^^^^^^ source.ctl
+#                                                    ^ source.ctl punctuation.separator.comma.ctl
+#                                                     ^ source.ctl
+#                                                      ^^^^^^^^^^^^ source.ctl support.function.builtin.ctl
+#                                                                  ^ source.ctl punctuation.section.parens.ctl
+#                                                                   ^^^^^^ source.ctl
+#                                                                         ^ source.ctl punctuation.separator.comma.ctl
+#                                                                          ^ source.ctl
+#                                                                           ^^^^^^^^^^ source.ctl support.function.builtin.ctl
+#                                                                                     ^ source.ctl punctuation.section.parens.ctl
+#                                                                                      ^^^^^^^^^^^^^ source.ctl
+#                                                                                                   ^ source.ctl punctuation.section.parens.ctl
+#                                                                                                    ^ source.ctl
+#                                                                                                     ^ source.ctl punctuation.section.parens.ctl
+#                                                                                                      ^ source.ctl
+#                                                                                                       ^ source.ctl punctuation.section.parens.ctl
+#                                                                                                        ^ source.ctl punctuation.terminator.statement.ctl
+>
+>  return cat_matrix;
+#^^ source.ctl
+#  ^^^^^^ source.ctl keyword.control.ctl
+#        ^^^^^^^^^^^ source.ctl
+#                   ^ source.ctl punctuation.terminator.statement.ctl
+>}
+#^ source.ctl punctuation.section.block.ctl
+>
+>float[3][3] calculate_rgb_to_rgb_matrix
+#^^^^^ source.ctl support.type.primitive.ctl
+#     ^ source.ctl punctuation.section.brackets.ctl
+#      ^ source.ctl constant.numeric.integer.decimal.ctl
+#       ^ source.ctl punctuation.section.brackets.ctl
+#        ^ source.ctl punctuation.section.brackets.ctl
+#         ^ source.ctl constant.numeric.integer.decimal.ctl
+#          ^ source.ctl punctuation.section.brackets.ctl
+#           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.ctl
+>  ( Chromaticities SOURCE_PRIMARIES,
+#^^ source.ctl
+#  ^ source.ctl punctuation.section.parens.ctl
+#   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.ctl
+#                                   ^ source.ctl punctuation.separator.comma.ctl
+>    Chromaticities DEST_PRIMARIES,
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.ctl
+#                                 ^ source.ctl punctuation.separator.comma.ctl
+>    float coneRespMat[3][3] = CONE_RESP_MAT_BRADFORD
+#^^^^ source.ctl
+#    ^^^^^ source.ctl support.type.primitive.ctl
+#         ^^^^^^^^^^^^ source.ctl
+#                     ^ source.ctl punctuation.section.brackets.ctl
+#                      ^ source.ctl constant.numeric.integer.decimal.ctl
+#                       ^ source.ctl punctuation.section.brackets.ctl
+#                        ^ source.ctl punctuation.section.brackets.ctl
+#                         ^ source.ctl constant.numeric.integer.decimal.ctl
+#                          ^ source.ctl punctuation.section.brackets.ctl
+#                           ^ source.ctl
+#                            ^ source.ctl keyword.operator.assignment.ctl
+#                             ^^^^^^^^^^^^^^^^^^^^^^^^ source.ctl
+>  )
+#^^ source.ctl
+#  ^ source.ctl punctuation.section.parens.ctl
+>{
+#^ source.ctl punctuation.section.block.ctl
+>  //
+#^^ source.ctl
+#  ^^ source.ctl comment.line.double-slash.ctl
+>  // Calculates and returns a 3x3 RGB-to-RGB matrix from the source primaries to the 
+#^^ source.ctl
+#  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.ctl comment.line.double-slash.ctl
+>  // destination primaries. The returned matrix is effectively a concatenation of a 
+#^^ source.ctl
+#  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.ctl comment.line.double-slash.ctl
+>  // conversion of the source RGB values into CIE XYZ tristimulus values, conversion to
+#^^ source.ctl
+#  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.ctl comment.line.double-slash.ctl
+>  // cone response values or other space in which reconciliation of the encoding white is 
+#^^ source.ctl
+#  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.ctl comment.line.double-slash.ctl
+>  // done, a conversion back to CIE XYZ tristimulus values, and finally conversion from 
+#^^ source.ctl
+#  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.ctl comment.line.double-slash.ctl
+>  // CIE XYZ tristimulus values to the destination RGB values.
+#^^ source.ctl
+#  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.ctl comment.line.double-slash.ctl
+>  //
+#^^ source.ctl
+#  ^^ source.ctl comment.line.double-slash.ctl
+>  // By default, coneRespMat is set to CONE_RESP_MAT_BRADFORD. 
+#^^ source.ctl
+#  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.ctl comment.line.double-slash.ctl
+>  // The default coneRespMat can be overridden at runtime. 
+#^^ source.ctl
+#  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.ctl comment.line.double-slash.ctl
+>  //
+#^^ source.ctl
+#  ^^ source.ctl comment.line.double-slash.ctl
+>
+>  const float RGBtoXYZ_44[4][4] = RGBtoXYZ( SOURCE_PRIMARIES, 1.0);
+#^^ source.ctl
+#  ^^^^^ source.ctl storage.modifier.ctl
+#       ^ source.ctl
+#        ^^^^^ source.ctl support.type.primitive.ctl
+#             ^^^^^^^^^^^^ source.ctl
+#                         ^ source.ctl punctuation.section.brackets.ctl
+#                          ^ source.ctl constant.numeric.integer.decimal.ctl
+#                           ^ source.ctl punctuation.section.brackets.ctl
+#                            ^ source.ctl punctuation.section.brackets.ctl
+#                             ^ source.ctl constant.numeric.integer.decimal.ctl
+#                              ^ source.ctl punctuation.section.brackets.ctl
+#                               ^ source.ctl
+#                                ^ source.ctl keyword.operator.assignment.ctl
+#                                 ^ source.ctl
+#                                  ^^^^^^^^ source.ctl support.function.builtin.ctl
+#                                          ^ source.ctl punctuation.section.parens.ctl
+#                                           ^^^^^^^^^^^^^^^^^ source.ctl
+#                                                            ^ source.ctl punctuation.separator.comma.ctl
+#                                                             ^ source.ctl
+#                                                              ^^^ source.ctl constant.numeric.float.ctl
+#                                                                 ^ source.ctl punctuation.section.parens.ctl
+#                                                                  ^ source.ctl punctuation.terminator.statement.ctl
+>  const float RGBtoXYZ_MAT[3][3] = 
+#^^ source.ctl
+#  ^^^^^ source.ctl storage.modifier.ctl
+#       ^ source.ctl
+#        ^^^^^ source.ctl support.type.primitive.ctl
+#             ^^^^^^^^^^^^^ source.ctl
+#                          ^ source.ctl punctuation.section.brackets.ctl
+#                           ^ source.ctl constant.numeric.integer.decimal.ctl
+#                            ^ source.ctl punctuation.section.brackets.ctl
+#                             ^ source.ctl punctuation.section.brackets.ctl
+#                              ^ source.ctl constant.numeric.integer.decimal.ctl
+#                               ^ source.ctl punctuation.section.brackets.ctl
+#                                ^ source.ctl
+#                                 ^ source.ctl keyword.operator.assignment.ctl
+#                                  ^^ source.ctl
+>    { {RGBtoXYZ_44[0][0], RGBtoXYZ_44[0][1], RGBtoXYZ_44[0][2]}, 
+#^^^^ source.ctl
+#    ^ source.ctl punctuation.section.block.ctl
+#     ^ source.ctl
+#      ^ source.ctl punctuation.section.block.ctl
+#       ^^^^^^^^^^^ source.ctl
+#                  ^ source.ctl punctuation.section.brackets.ctl
+#                   ^ source.ctl constant.numeric.integer.decimal.ctl
+#                    ^ source.ctl punctuation.section.brackets.ctl
+#                     ^ source.ctl punctuation.section.brackets.ctl
+#                      ^ source.ctl constant.numeric.integer.decimal.ctl
+#                       ^ source.ctl punctuation.section.brackets.ctl
+#                        ^ source.ctl punctuation.separator.comma.ctl
+#                         ^^^^^^^^^^^^ source.ctl
+#                                     ^ source.ctl punctuation.section.brackets.ctl
+#                                      ^ source.ctl constant.numeric.integer.decimal.ctl
+#                                       ^ source.ctl punctuation.section.brackets.ctl
+#                                        ^ source.ctl punctuation.section.brackets.ctl
+#                                         ^ source.ctl constant.numeric.integer.decimal.ctl
+#                                          ^ source.ctl punctuation.section.brackets.ctl
+#                                           ^ source.ctl punctuation.separator.comma.ctl
+#                                            ^^^^^^^^^^^^ source.ctl
+#                                                        ^ source.ctl punctuation.section.brackets.ctl
+#                                                         ^ source.ctl constant.numeric.integer.decimal.ctl
+#                                                          ^ source.ctl punctuation.section.brackets.ctl
+#                                                           ^ source.ctl punctuation.section.brackets.ctl
+#                                                            ^ source.ctl constant.numeric.integer.decimal.ctl
+#                                                             ^ source.ctl punctuation.section.brackets.ctl
+#                                                              ^ source.ctl punctuation.section.block.ctl
+#                                                               ^ source.ctl punctuation.separator.comma.ctl
+#                                                                ^^ source.ctl
+>      {RGBtoXYZ_44[1][0], RGBtoXYZ_44[1][1], RGBtoXYZ_44[1][2]}, 
+#^^^^^^ source.ctl
+#      ^ source.ctl punctuation.section.block.ctl
+#       ^^^^^^^^^^^ source.ctl
+#                  ^ source.ctl punctuation.section.brackets.ctl
+#                   ^ source.ctl constant.numeric.integer.decimal.ctl
+#                    ^ source.ctl punctuation.section.brackets.ctl
+#                     ^ source.ctl punctuation.section.brackets.ctl
+#                      ^ source.ctl constant.numeric.integer.decimal.ctl
+#                       ^ source.ctl punctuation.section.brackets.ctl
+#                        ^ source.ctl punctuation.separator.comma.ctl
+#                         ^^^^^^^^^^^^ source.ctl
+#                                     ^ source.ctl punctuation.section.brackets.ctl
+#                                      ^ source.ctl constant.numeric.integer.decimal.ctl
+#                                       ^ source.ctl punctuation.section.brackets.ctl
+#                                        ^ source.ctl punctuation.section.brackets.ctl
+#                                         ^ source.ctl constant.numeric.integer.decimal.ctl
+#                                          ^ source.ctl punctuation.section.brackets.ctl
+#                                           ^ source.ctl punctuation.separator.comma.ctl
+#                                            ^^^^^^^^^^^^ source.ctl
+#                                                        ^ source.ctl punctuation.section.brackets.ctl
+#                                                         ^ source.ctl constant.numeric.integer.decimal.ctl
+#                                                          ^ source.ctl punctuation.section.brackets.ctl
+#                                                           ^ source.ctl punctuation.section.brackets.ctl
+#                                                            ^ source.ctl constant.numeric.integer.decimal.ctl
+#                                                             ^ source.ctl punctuation.section.brackets.ctl
+#                                                              ^ source.ctl punctuation.section.block.ctl
+#                                                               ^ source.ctl punctuation.separator.comma.ctl
+#                                                                ^^ source.ctl
+>      {RGBtoXYZ_44[2][0], RGBtoXYZ_44[2][1], RGBtoXYZ_44[2][2]} };
+#^^^^^^ source.ctl
+#      ^ source.ctl punctuation.section.block.ctl
+#       ^^^^^^^^^^^ source.ctl
+#                  ^ source.ctl punctuation.section.brackets.ctl
+#                   ^ source.ctl constant.numeric.integer.decimal.ctl
+#                    ^ source.ctl punctuation.section.brackets.ctl
+#                     ^ source.ctl punctuation.section.brackets.ctl
+#                      ^ source.ctl constant.numeric.integer.decimal.ctl
+#                       ^ source.ctl punctuation.section.brackets.ctl
+#                        ^ source.ctl punctuation.separator.comma.ctl
+#                         ^^^^^^^^^^^^ source.ctl
+#                                     ^ source.ctl punctuation.section.brackets.ctl
+#                                      ^ source.ctl constant.numeric.integer.decimal.ctl
+#                                       ^ source.ctl punctuation.section.brackets.ctl
+#                                        ^ source.ctl punctuation.section.brackets.ctl
+#                                         ^ source.ctl constant.numeric.integer.decimal.ctl
+#                                          ^ source.ctl punctuation.section.brackets.ctl
+#                                           ^ source.ctl punctuation.separator.comma.ctl
+#                                            ^^^^^^^^^^^^ source.ctl
+#                                                        ^ source.ctl punctuation.section.brackets.ctl
+#                                                         ^ source.ctl constant.numeric.integer.decimal.ctl
+#                                                          ^ source.ctl punctuation.section.brackets.ctl
+#                                                           ^ source.ctl punctuation.section.brackets.ctl
+#                                                            ^ source.ctl constant.numeric.integer.decimal.ctl
+#                                                             ^ source.ctl punctuation.section.brackets.ctl
+#                                                              ^ source.ctl punctuation.section.block.ctl
+#                                                               ^ source.ctl
+#                                                                ^ source.ctl punctuation.section.block.ctl
+#                                                                 ^ source.ctl punctuation.terminator.statement.ctl
+>
+>  // Chromatic adaptation from source white to destination white chromaticity
+#^^ source.ctl
+#  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.ctl comment.line.double-slash.ctl
+>  // Bradford cone response matrix is the default method
+#^^ source.ctl
+#  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.ctl comment.line.double-slash.ctl
+>  const float CAT[3][3] = calculate_cat_matrix( SOURCE_PRIMARIES.white, 
+#^^ source.ctl
+#  ^^^^^ source.ctl storage.modifier.ctl
+#       ^ source.ctl
+#        ^^^^^ source.ctl support.type.primitive.ctl
+#             ^^^^ source.ctl
+#                 ^ source.ctl punctuation.section.brackets.ctl
+#                  ^ source.ctl constant.numeric.integer.decimal.ctl
+#                   ^ source.ctl punctuation.section.brackets.ctl
+#                    ^ source.ctl punctuation.section.brackets.ctl
+#                     ^ source.ctl constant.numeric.integer.decimal.ctl
+#                      ^ source.ctl punctuation.section.brackets.ctl
+#                       ^ source.ctl
+#                        ^ source.ctl keyword.operator.assignment.ctl
+#                         ^ source.ctl
+#                          ^^^^^^^^^^^^^^^^^^^^ source.ctl entity.name.function.call.ctl
+#                                              ^ source.ctl punctuation.section.parens.ctl
+#                                               ^^^^^^^^^^^^^^^^^ source.ctl
+#                                                                ^ source.ctl punctuation.accessor.member.ctl
+#                                                                 ^^^^^ source.ctl
+#                                                                      ^ source.ctl punctuation.separator.comma.ctl
+#                                                                       ^^ source.ctl
+>                                                DEST_PRIMARIES.white,
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.ctl
+#                                                              ^ source.ctl punctuation.accessor.member.ctl
+#                                                               ^^^^^ source.ctl
+#                                                                    ^ source.ctl punctuation.separator.comma.ctl
+>                                                coneRespMat );
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.ctl
+#                                                            ^ source.ctl punctuation.section.parens.ctl
+#                                                             ^ source.ctl punctuation.terminator.statement.ctl
+>
+>  const float XYZtoRGB_44[4][4] = XYZtoRGB( DEST_PRIMARIES, 1.0);
+#^^ source.ctl
+#  ^^^^^ source.ctl storage.modifier.ctl
+#       ^ source.ctl
+#        ^^^^^ source.ctl support.type.primitive.ctl
+#             ^^^^^^^^^^^^ source.ctl
+#                         ^ source.ctl punctuation.section.brackets.ctl
+#                          ^ source.ctl constant.numeric.integer.decimal.ctl
+#                           ^ source.ctl punctuation.section.brackets.ctl
+#                            ^ source.ctl punctuation.section.brackets.ctl
+#                             ^ source.ctl constant.numeric.integer.decimal.ctl
+#                              ^ source.ctl punctuation.section.brackets.ctl
+#                               ^ source.ctl
+#                                ^ source.ctl keyword.operator.assignment.ctl
+#                                 ^ source.ctl
+#                                  ^^^^^^^^ source.ctl support.function.builtin.ctl
+#                                          ^ source.ctl punctuation.section.parens.ctl
+#                                           ^^^^^^^^^^^^^^^ source.ctl
+#                                                          ^ source.ctl punctuation.separator.comma.ctl
+#                                                           ^ source.ctl
+#                                                            ^^^ source.ctl constant.numeric.float.ctl
+#                                                               ^ source.ctl punctuation.section.parens.ctl
+#                                                                ^ source.ctl punctuation.terminator.statement.ctl
+>  const float XYZtoRGB_MAT[3][3] = 
+#^^ source.ctl
+#  ^^^^^ source.ctl storage.modifier.ctl
+#       ^ source.ctl
+#        ^^^^^ source.ctl support.type.primitive.ctl
+#             ^^^^^^^^^^^^^ source.ctl
+#                          ^ source.ctl punctuation.section.brackets.ctl
+#                           ^ source.ctl constant.numeric.integer.decimal.ctl
+#                            ^ source.ctl punctuation.section.brackets.ctl
+#                             ^ source.ctl punctuation.section.brackets.ctl
+#                              ^ source.ctl constant.numeric.integer.decimal.ctl
+#                               ^ source.ctl punctuation.section.brackets.ctl
+#                                ^ source.ctl
+#                                 ^ source.ctl keyword.operator.assignment.ctl
+#                                  ^^ source.ctl
+>    { {XYZtoRGB_44[0][0], XYZtoRGB_44[0][1], XYZtoRGB_44[0][2]}, 
+#^^^^ source.ctl
+#    ^ source.ctl punctuation.section.block.ctl
+#     ^ source.ctl
+#      ^ source.ctl punctuation.section.block.ctl
+#       ^^^^^^^^^^^ source.ctl
+#                  ^ source.ctl punctuation.section.brackets.ctl
+#                   ^ source.ctl constant.numeric.integer.decimal.ctl
+#                    ^ source.ctl punctuation.section.brackets.ctl
+#                     ^ source.ctl punctuation.section.brackets.ctl
+#                      ^ source.ctl constant.numeric.integer.decimal.ctl
+#                       ^ source.ctl punctuation.section.brackets.ctl
+#                        ^ source.ctl punctuation.separator.comma.ctl
+#                         ^^^^^^^^^^^^ source.ctl
+#                                     ^ source.ctl punctuation.section.brackets.ctl
+#                                      ^ source.ctl constant.numeric.integer.decimal.ctl
+#                                       ^ source.ctl punctuation.section.brackets.ctl
+#                                        ^ source.ctl punctuation.section.brackets.ctl
+#                                         ^ source.ctl constant.numeric.integer.decimal.ctl
+#                                          ^ source.ctl punctuation.section.brackets.ctl
+#                                           ^ source.ctl punctuation.separator.comma.ctl
+#                                            ^^^^^^^^^^^^ source.ctl
+#                                                        ^ source.ctl punctuation.section.brackets.ctl
+#                                                         ^ source.ctl constant.numeric.integer.decimal.ctl
+#                                                          ^ source.ctl punctuation.section.brackets.ctl
+#                                                           ^ source.ctl punctuation.section.brackets.ctl
+#                                                            ^ source.ctl constant.numeric.integer.decimal.ctl
+#                                                             ^ source.ctl punctuation.section.brackets.ctl
+#                                                              ^ source.ctl punctuation.section.block.ctl
+#                                                               ^ source.ctl punctuation.separator.comma.ctl
+#                                                                ^^ source.ctl
+>      {XYZtoRGB_44[1][0], XYZtoRGB_44[1][1], XYZtoRGB_44[1][2]}, 
+#^^^^^^ source.ctl
+#      ^ source.ctl punctuation.section.block.ctl
+#       ^^^^^^^^^^^ source.ctl
+#                  ^ source.ctl punctuation.section.brackets.ctl
+#                   ^ source.ctl constant.numeric.integer.decimal.ctl
+#                    ^ source.ctl punctuation.section.brackets.ctl
+#                     ^ source.ctl punctuation.section.brackets.ctl
+#                      ^ source.ctl constant.numeric.integer.decimal.ctl
+#                       ^ source.ctl punctuation.section.brackets.ctl
+#                        ^ source.ctl punctuation.separator.comma.ctl
+#                         ^^^^^^^^^^^^ source.ctl
+#                                     ^ source.ctl punctuation.section.brackets.ctl
+#                                      ^ source.ctl constant.numeric.integer.decimal.ctl
+#                                       ^ source.ctl punctuation.section.brackets.ctl
+#                                        ^ source.ctl punctuation.section.brackets.ctl
+#                                         ^ source.ctl constant.numeric.integer.decimal.ctl
+#                                          ^ source.ctl punctuation.section.brackets.ctl
+#                                           ^ source.ctl punctuation.separator.comma.ctl
+#                                            ^^^^^^^^^^^^ source.ctl
+#                                                        ^ source.ctl punctuation.section.brackets.ctl
+#                                                         ^ source.ctl constant.numeric.integer.decimal.ctl
+#                                                          ^ source.ctl punctuation.section.brackets.ctl
+#                                                           ^ source.ctl punctuation.section.brackets.ctl
+#                                                            ^ source.ctl constant.numeric.integer.decimal.ctl
+#                                                             ^ source.ctl punctuation.section.brackets.ctl
+#                                                              ^ source.ctl punctuation.section.block.ctl
+#                                                               ^ source.ctl punctuation.separator.comma.ctl
+#                                                                ^^ source.ctl
+>      {XYZtoRGB_44[2][0], XYZtoRGB_44[2][1], XYZtoRGB_44[2][2]}};
+#^^^^^^ source.ctl
+#      ^ source.ctl punctuation.section.block.ctl
+#       ^^^^^^^^^^^ source.ctl
+#                  ^ source.ctl punctuation.section.brackets.ctl
+#                   ^ source.ctl constant.numeric.integer.decimal.ctl
+#                    ^ source.ctl punctuation.section.brackets.ctl
+#                     ^ source.ctl punctuation.section.brackets.ctl
+#                      ^ source.ctl constant.numeric.integer.decimal.ctl
+#                       ^ source.ctl punctuation.section.brackets.ctl
+#                        ^ source.ctl punctuation.separator.comma.ctl
+#                         ^^^^^^^^^^^^ source.ctl
+#                                     ^ source.ctl punctuation.section.brackets.ctl
+#                                      ^ source.ctl constant.numeric.integer.decimal.ctl
+#                                       ^ source.ctl punctuation.section.brackets.ctl
+#                                        ^ source.ctl punctuation.section.brackets.ctl
+#                                         ^ source.ctl constant.numeric.integer.decimal.ctl
+#                                          ^ source.ctl punctuation.section.brackets.ctl
+#                                           ^ source.ctl punctuation.separator.comma.ctl
+#                                            ^^^^^^^^^^^^ source.ctl
+#                                                        ^ source.ctl punctuation.section.brackets.ctl
+#                                                         ^ source.ctl constant.numeric.integer.decimal.ctl
+#                                                          ^ source.ctl punctuation.section.brackets.ctl
+#                                                           ^ source.ctl punctuation.section.brackets.ctl
+#                                                            ^ source.ctl constant.numeric.integer.decimal.ctl
+#                                                             ^ source.ctl punctuation.section.brackets.ctl
+#                                                              ^ source.ctl punctuation.section.block.ctl
+#                                                               ^ source.ctl punctuation.section.block.ctl
+#                                                                ^ source.ctl punctuation.terminator.statement.ctl
+>
+>  return mult_f33_f33( RGBtoXYZ_MAT, mult_f33_f33( CAT, XYZtoRGB_MAT));
+#^^ source.ctl
+#  ^^^^^^ source.ctl keyword.control.ctl
+#        ^ source.ctl
+#         ^^^^^^^^^^^^ source.ctl support.function.builtin.ctl
+#                     ^ source.ctl punctuation.section.parens.ctl
+#                      ^^^^^^^^^^^^^ source.ctl
+#                                   ^ source.ctl punctuation.separator.comma.ctl
+#                                    ^ source.ctl
+#                                     ^^^^^^^^^^^^ source.ctl support.function.builtin.ctl
+#                                                 ^ source.ctl punctuation.section.parens.ctl
+#                                                  ^^^^ source.ctl
+#                                                      ^ source.ctl punctuation.separator.comma.ctl
+#                                                       ^^^^^^^^^^^^^ source.ctl
+#                                                                    ^ source.ctl punctuation.section.parens.ctl
+#                                                                     ^ source.ctl punctuation.section.parens.ctl
+#                                                                      ^ source.ctl punctuation.terminator.statement.ctl
+>}
+#^ source.ctl punctuation.section.block.ctl
