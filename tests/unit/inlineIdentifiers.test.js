@@ -1,7 +1,7 @@
 // Unit test for findInlineIdentifiers.  Run via `npm test`.
 //
-// Pure-Node, no jest/mocha — keeps the vscode-ctl dev dependencies
-// lean.  Asserts using node's built-in assert.
+// Pure-Node, no jest/mocha — keeps the vscode-ctl-debug dev
+// dependencies lean.  Asserts using node's built-in assert.
 //
 // We require the COMPILED helper from out/ so this test fails fast if
 // the TypeScript build is broken or out of date.

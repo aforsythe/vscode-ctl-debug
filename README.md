@@ -1,5 +1,11 @@
 # CTL Debug for VS Code
 
+[![Marketplace Version](https://vsmarketplacebadges.dev/version-short/ctl-org.ctl-debug.svg)](https://marketplace.visualstudio.com/items?itemName=ctl-org.ctl-debug)
+[![Installs](https://vsmarketplacebadges.dev/installs-short/ctl-org.ctl-debug.svg)](https://marketplace.visualstudio.com/items?itemName=ctl-org.ctl-debug)
+[![Rating](https://vsmarketplacebadges.dev/rating-short/ctl-org.ctl-debug.svg)](https://marketplace.visualstudio.com/items?itemName=ctl-org.ctl-debug&ssr=false#review-details)
+[![CI](https://github.com/aforsythe/vscode-ctl-debug/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/aforsythe/vscode-ctl-debug/actions/workflows/ci.yml)
+[![License: Apache 2.0](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
+
 > Single-pixel debugger for **CTL** (Color Transformation Language)
 > with inline values, color swatches, and a status-bar pixel picker.
 > Set a breakpoint, click a color, hit F5.
@@ -16,7 +22,7 @@
 
 1. **Install the extension** from the VS Code Marketplace
    (search for **CTL Debug**), or grab the `.vsix` from the
-   [latest GitHub release](https://github.com/aswf/vscode-ctl/releases)
+   [latest GitHub release](https://github.com/aforsythe/vscode-ctl-debug/releases)
    and `code --install-extension ctl-debug-*.vsix`.
 2. **Get the `ctldap` binary** — built from the
    [CTL repo](https://github.com/ampas/CTL) with

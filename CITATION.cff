@@ -1,0 +1,31 @@
+cff-version: 1.2.0
+message: If you use vscode-ctl-debug in academic work, please cite it via the metadata below.
+type: software
+title: vscode-ctl-debug
+abstract: >-
+  VS Code extension for debugging CTL (Color Transformation Language)
+  modules a single pixel at a time. Wraps the ctldap Debug Adapter
+  Protocol server with first-class IDE affordances: inline values
+  rendered next to identifiers while paused, color swatches that
+  show the actual on-screen color of every RGB(A)-shaped local as
+  the pipeline transforms it, a status-bar pixel picker for the F5
+  test pixel, multi-stage chain debugging that hands a pixel from
+  one .ctl program to the next, conditional breakpoints + logpoints
+  + watch expressions backed by a small in-extension evaluator, and
+  TextMate grammar coverage of the CTL standard library.
+authors:
+  - family-names: Forsythe
+    given-names: Alex
+repository-code: https://github.com/aforsythe/vscode-ctl-debug
+keywords:
+  - color science
+  - CTL
+  - Color Transformation Language
+  - ACES
+  - VS Code
+  - debugger
+  - DAP
+  - Debug Adapter Protocol
+license: Apache-2.0
+version: 0.1.0
+date-released: 2026-04-26

@@ -7,10 +7,10 @@
     "license": "Apache-2.0",
     "repository": {
         "type": "git",
-        "url": "https://github.com/aswf/vscode-ctl"
+        "url": "https://github.com/aforsythe/vscode-ctl-debug"
     },
     "bugs": {
-        "url": "https://github.com/aswf/vscode-ctl/issues"
+        "url": "https://github.com/aforsythe/vscode-ctl-debug/issues"
     },
     "engines": {
         "vscode": "^1.80.0"
@@ -207,7 +207,7 @@
         "compile": "tsc -p ./",
         "watch": "tsc -watch -p ./",
         "test:unit": "node tests/unit/inlineIdentifiers.test.js && node tests/unit/ctlRepoDetect.test.js && node tests/unit/colorSwatches.test.js",
-        "test:grammar": "vscode-tmgrammar-snap -s source.ctl -g syntaxes/ctl.tmLanguage.json 'tests/grammar/fixtures/*.ctl'",
+        "test:grammar": "vscode-tmgrammar-snap -s source.ctl -g syntaxes/ctl.tmLanguage.json \"tests/grammar/fixtures/*.ctl\"",
         "test": "npm run compile && npm run test:unit && npm run test:grammar"
     },
     "devDependencies": {

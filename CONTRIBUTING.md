@@ -1,4 +1,4 @@
-# Contributing to vscode-ctl
+# Contributing to vscode-ctl-debug
 
 Thanks for your interest in improving the CTL Debug VS Code extension.
 
@@ -18,8 +18,8 @@ Prerequisites:
 Clone, install, build:
 
 ```sh
-git clone https://github.com/aswf/vscode-ctl.git
-cd vscode-ctl
+git clone https://github.com/aforsythe/vscode-ctl-debug.git
+cd vscode-ctl-debug
 npm install
 npm run compile
 ```

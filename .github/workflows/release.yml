@@ -16,6 +16,10 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write    # needed to attach the .vsix to a GitHub Release
+    env:
+      # Lifted to job env so the publish step's `if:` can read it.
+      # `secrets.*` is not available inside step-level `if:` expressions.
+      VSCE_PAT: ${{ secrets.VSCE_PAT }}
     steps:
       - uses: actions/checkout@v4
 
@@ -45,9 +49,7 @@ jobs:
         # Only publishes if VSCE_PAT secret is set.  Otherwise the
         # release still attaches the .vsix to the GitHub Release so
         # users can install it manually.
-        if: ${{ secrets.VSCE_PAT != '' }}
-        env:
-          VSCE_PAT: ${{ secrets.VSCE_PAT }}
+        if: env.VSCE_PAT != ''
         run: npx --yes @vscode/vsce publish --no-yarn --pat "$VSCE_PAT"
 
       - name: Create GitHub Release
